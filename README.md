@@ -376,8 +376,14 @@ Familien-Essensplan, der weiter bestehen bleibt.
 | Übungskatalog | `database/data/exercises/*.json` |
 | Lebensmittel (BLS 4.0) | `database/data/foods/bls_4_0.csv`, Umwandlung: `scripts/bls/convert.py` |
 
-## Tests
+## Tests & Prüfwerkzeuge
 
 ```bash
-php artisan test
+php artisan test                                  # SQLite im Speicher, echte DB bleibt unberührt
+vendor/bin/pint                                   # Code-Stil
+python scripts/dev/check-tailwind-classes.py      # stehen alle verwendeten Tailwind-Klassen im Build?
+scripts/dev/screenshot.sh /mein-plan shot.png     # Seite als Handy-Screenshot (Git Bash, Headless-Edge)
 ```
+
+Ohne Node auf dem Server-PC dürfen Views nur Klassen nutzen, die schon in `public/build` stehen – der Klassen-Check
+meldet alles andere. Das Screenshot-Skript meldet sich als `Admin`/`Test` an (anpassbar über `SHOT_USER`/`SHOT_PASS`).

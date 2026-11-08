@@ -2,7 +2,8 @@
 
 Laravel-12-App (Blade, Tailwind 4, Alpine.js) für eine Familie im Heimnetz. UI, Code-Kommentare,
 Commit-Messages und Antworten an den Nutzer: **Deutsch**. Details zu Funktionen stehen in `README.md`,
-der Ausbauplan in **`TODO.md`**.
+der Ausbauplan in **`TODO.md`** – **neue Session: zuerst dort den Abschnitt „Übergabe“ lesen** (Stand,
+offene Punkte, empfohlene nächste Schritte).
 
 ## Dieser Fork
 
@@ -33,8 +34,11 @@ der Ausbauplan in **`TODO.md`**.
   („Claude-Test“), IDs merken und danach gezielt wieder löschen; echte Einträge nie anfassen.
 - System-/Sicherheitseinstellungen (Windows-Firewall, Router, Rechte auf dem DB-Server) nicht selbst
   ändern – Befehl/SQL vorbereiten, Nutzer führt aus.
-- Nach Features: Tests, Pint, `npm run build`, im Browser (built-in, `http://localhost`) prüfen,
-  README ergänzen, danach committen und pushen. Ideenlisten nach Umsetzbarkeit sortieren.
+- Nach Features: Tests, Pint, Klassen-Check (`python scripts/dev/check-tailwind-classes.py`), neue Migrationen auf der
+  lokalen DB ausführen (`php artisan migrate --force`), im Browser prüfen (Screenshot in Handygröße, siehe „Prüfen im
+  Browser“), README/TODO/CLAUDE.md ergänzen, danach committen und pushen. Ideenlisten nach Umsetzbarkeit sortieren.
+- Der Nutzer lässt Claude die Reihenfolge oft selbst wählen („entscheide selbst und mach weiter“, „ja mach“):
+  dann den nächsten sinnvollen Punkt aus `TODO.md` nehmen, Entscheidung kurz begründen, fertig umsetzen.
 
 ## Umgebung (Fork-PC, Stand 08.11.2026)
 
@@ -52,7 +56,9 @@ der Ausbauplan in **`TODO.md`**.
 - Autostart: `scripts/windows/Install-Server.ps1` (als Administrator) richtet die Dienste `Apache2.4` und `mysql`
   (Automatisch, Neustart bei Absturz), PHP im System-PATH und die Firewall-Regel „Rezeptbuch (Apache, Heimnetz)“
   ein; `-Uninstall` macht Dienste/Regel rückgängig. Ob das Skript schon gelaufen ist: `Get-Service Apache2.4, mysql`.
-- Kein Shell-Zugriff von Claude auf den PC (nur Dateien): Befehle als Skript/Anleitung vorbereiten, Nutzer führt aus.
+- Claude hat Shell-Zugriff (Git Bash/PowerShell): `php`, `php artisan`, `vendor/bin/pint`, `git`, `curl`, `python`
+  laufen direkt (PHP im PATH). Kein Node/npm. Windows-Dienste, Firewall und Admin-Rechte weiterhin nicht selbst
+  ändern – Befehl vorbereiten, Nutzer führt aus.
 - Standard-Admin per Migration: `Admin` / `Test`.
 - Kein HTTPS → `navigator.share`, Clipboard-API, Wake Lock, Service Worker nicht verfügbar
   (Fallbacks sind eingebaut). Zeitzone `Europe/Berlin`.
@@ -62,8 +68,10 @@ der Ausbauplan in **`TODO.md`**.
 ```bash
 php artisan test            # SQLite in-memory (phpunit.xml), echte DB bleibt unberührt
 vendor/bin/pint             # Code-Stil
-npm run build               # nach jeder Änderung an Views/CSS/JS nötig (kein Vite-Dev-Server im Betrieb);
-                            # public/build wird mitcommittet (auf dem Fork-PC ist kein Node installiert)
+npm run build               # NUR auf einem Rechner mit Node – auf dem Fork-PC nicht möglich; public/build mitcommitten
+python scripts/dev/check-tailwind-classes.py   # stehen alle verwendeten Klassen schon im Build? (Exit 1 = nein)
+scripts/dev/screenshot.sh /mein-plan shot.png  # Seite als Handy-Screenshot (Login Admin/Test, Headless-Edge)
+php artisan migrate --force # neue Migrationen auf der lokalen DB (nur additive Änderungen ohne Rückfrage)
 php artisan view:clear
 php artisan users:create    # Account per Konsole; recipes:import = alte recipes.json importieren
 php artisan exercises:import # Übungskatalog aus database/data/exercises/*.json (wiederholbar)
@@ -104,7 +112,8 @@ php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_
   ohne Benutzer-Parameter → immer nur das eigene Profil. Action `SaveBodyProfile` (über die Beziehung, `user_id` nicht fillable).
 - Mein Plan (persönlicher Wochenplaner, `/mein-plan/{week?}`): `PlannedMeal` (Rezept+`servings` oder Food+`grams`,
   Enum `MealSlot`, `position` je Tag+Mahlzeit, Scope `withDetails()` lädt `recipe.ingredients.food` + `food`,
-  `nutrients()` = null wenn Rezept ohne Nährwerte), `TrainingDay` (Zeile = Trainingstag). `Support/Planning/WeekPlan::for($user, $week)`
+  `nutrients()` = null wenn Rezept ohne Nährwerte), `TrainingDay` (Abweichung vom Trainingsplan, siehe unten).
+  `Support/Planning/WeekPlan::for($user, $week)`
   → `DayPlan` je Tag (Summe, Ziel aus `EnergyBudget`, `remainingKcal()`, `isOverBudget()` mit `budget.over_tolerance`).
   Routen `{day}` = `2026-11-09`; alles ohne Benutzer-Parameter, `PlannedMealPolicy` = nur Besitzer. Für alle Rollen.
   Startseite „Mein Tag“ (`home/partials/my-day.blade.php`): `HomeController` übergibt `myPlan`/`myDay`/`slots`;
@@ -140,6 +149,16 @@ php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_
 - Tests: `travelTo('2026-10-14 18:00')` (Mittwoch, KW 42) für Wochenlogik; Factory-States
   `User::factory()->admin()/child()`, `Recipe::factory()->complete()`.
 
+## Prüfen im Browser
+
+- Apache läuft lokal (`http://localhost`), Login per curl mit `Admin`/`Test` (Standard-Admin). `scripts/dev/screenshot.sh`
+  macht beides und rendert per Headless-Edge (`msedge.exe --headless=new --screenshot`). Screenshot mit dem Read-Tool ansehen.
+- Edge rendert mindestens ~500 px breit (kleiner = rechts abgeschnitten, auch die Kopfzeile) → 520 px nehmen.
+  Ohne `--virtual-time-budget` fehlen die Webfonts (leere Seite). Mit Anker-URL (`#…`) bleibt der Screenshot oft leer.
+- Für die Prüfung nötige Daten beim Admin-Account anlegen (Name/Notiz „Claude-Test“), IDs notieren und danach
+  gezielt per `php artisan tinker --execute=…` löschen; immer mit `where('user_id', $admin->id)->whereKey([...])`.
+- Echte Daten anderer Accounts (z. B. Trainings von „marian“) nie anfassen, auch nicht zum Aufräumen.
+
 ## Stolpersteine
 
 - `Model::shouldBeStrict()` ist aktiv: kein Lazy Loading (immer `with()`), Mass-Assignment strikt
@@ -154,7 +173,14 @@ php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_
 - Zuordnungsassistent nutzt Inline-Alpine (`x-data` im Blade, kein neues JS-Modul) → kein Build nötig.
 - `DatabaseSeeder` importiert alle 7.140 Lebensmittel (Tests mit Seeder dauern dadurch ~1 s länger).
 - Bash-Heredocs mit Backslashes (PHP-Namespaces) werden zerschossen → Edit/Write-Tool oder
-  Python-Skript als Datei im Scratchpad nutzen.
+  Python-Skript als Datei im Scratchpad nutzen. Python unter Windows: Dateien mit `newline=''` öffnen, sonst
+  entstehen CRLF-Zeilenenden.
+- Neue Oberflächen ohne Build: nur vorhandene Klassen (Klassen-Check), Alpine nur inline (`x-data` im Blade) bzw.
+  vorhandene Module (`recipePicker` ist generisch: id/title/emoji/favorite). Grafiken als SVG mit
+  `var(--color-…)`-Theme-Farben (`progress-ring`, `progress-chart`, `muscle-map`, `exercise-illustration`).
+- Mehrere Aktionen in einem Formular (verschieben, entfernen, Satz hinzufügen): Submit-Knöpfe mit `name`/`value`
+  und als erstes Element ein verstecktes Standard-Submit (`class="hidden"`), damit Enter speichert.
+- Relationen mit `orderBy` (z. B. `$session->sets()`) vor einer anderen Sortierung mit `reorder()` zurücksetzen.
 - Keine GD: Fotos werden im Browser verkleinert (`recipe-appearance.js`), Server-Limit 12 MB.
 - Fotos liegen in der DB (`recipe_images`, nur über `$recipe->image()` laden, `storeImage()`/`removeImage()`);
   `recipes.image_hash` = vorhanden/Cache-Schlüssel. `image_path` ist ein Überbleibsel aus der Zeit vor der
@@ -177,5 +203,6 @@ Der Ausbauplan des Forks steht in `TODO.md`.
    (eigene CA auf 5 Geräten), Offline/Push
 
 Noch nicht auf echtem iPhone/iPad verifiziert: Wunschliste in Handygröße, Timer-Signalton,
-Kamera-Upload, Home-Bildschirm-App. Bekannte Grenze: „Ei“/„Eier“ werden auf der Einkaufsliste nicht
+Kamera-Upload, Home-Bildschirm-App sowie alle Fork-Seiten (Mein Plan, Training, Protokoll, Profil) – bisher nur
+per Headless-Edge-Screenshot (520 px) geprüft. Bekannte Grenze: „Ei“/„Eier“ werden auf der Einkaufsliste nicht
 zusammengefasst.
