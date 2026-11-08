@@ -25,7 +25,8 @@ der Ausbauplan in **`TODO.md`**.
 
 - Nutzer ist das Familienoberhaupt. 6 echte Accounts (Admin, Papa, Mama = Erwachsene/Admin; Joshua,
   Michelle, Chantal = Kinder). Nur 2 nutzen den Desktop, alle anderen **iPhone/iPad** → mobil zuerst denken.
-- **Committen/pushen nur auf ausdrückliche Bitte.** Vorher Diff auf Geheimnisse prüfen (`DB_PASSWORD`,
+- **Committen und pushen ohne Nachfrage** (Freigabe des Nutzers 08.11.2026) – nach abgeschlossenen, getesteten
+  Schritten. Vorher Diff auf Geheimnisse prüfen (`DB_PASSWORD`,
   `APP_KEY`, keine `storage/app`-/SQLite-Dateien). Themen in getrennte Commits. Branch: `master`,
   Remote: https://github.com/MarianRasinski/familyrecipes (Fork). Commit-Footer: `Co-Authored-By: Claude …`.
 - Die Datenbank (lokal, 127.0.0.1) kann echte Daten enthalten – behandeln wie die echte Familien-Datenbank. Testdaten nur auf freien Tagen/klar markiert
@@ -71,7 +72,7 @@ php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_
 ## Aufbau
 
 - `app/Actions/` – schreibende Abläufe: `SaveRecipe` (inkl. Änderungsprotokoll), `DeleteRecipe`,
-  `SaveMealPlan`, `ImportRecipeFromUrl`, `ImportExercises`, `ImportFoods`, `SaveIngredientNutrition`.
+  `SaveMealPlan`, `ImportRecipeFromUrl`, `ImportExercises`, `ImportFoods`, `SaveIngredientNutrition`, `SaveBodyProfile`.
 - `app/Support/` – Domänenlogik: `Week` (ISO-Woche, Route-Binding `{week}` = `2026-W43`),
   `WishList` (Wunsch offen bis im Plan; „erfüllt“ wird berechnet), `ShoppingList`/`ShoppingListItem`/
   `Quantity` (Mengen addieren), `CookingSteps` (Zutaten/Timer je Schritt), `LastEaten`,
@@ -91,9 +92,14 @@ php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_
   (`$recipe->nutrition()`, braucht `ingredients.food` geladen). Alle Annahmen in `config/nutrition.php`.
   `SaveRecipe` übernimmt Zuordnungen gleichnamiger Zutaten. Zuordnungen stehen nicht im Änderungsprotokoll.
   Handangaben `recipes.calories/protein` werden nur angezeigt, solange nichts berechnet ist.
+- Profil & Ziele: `BodyProfile` (Tabelle `body_profiles`, `user_id` unique, `$user->bodyProfile`), Enums `Sex`,
+  `ActivityLevel` (PAL), `FitnessGoal`, `TrainingType` (MET) – Zahlen in `config/nutrition.php` (`budget`).
+  `Support/Nutrition/EnergyBudget` (`$profile->budget($date)`): Ruhetag/Trainingstag/Wochenschnitt, Makros als
+  `Nutrients`, `steps()` = Rechenweg, `warnings()`. Gate `manage-body-profile` (alle außer Kinder); Route `/profil`
+  ohne Benutzer-Parameter → immer nur das eigene Profil. Action `SaveBodyProfile` (über die Beziehung, `user_id` nicht fillable).
 - Rechte: `App\Enums\Role` (admin/adult/child), Policies `RecipePolicy`, `UserPolicy`,
   `MealSuggestionPolicy`, Gates in `AppServiceProvider` (`make-wishes`, `plan-meals`, `view-shopping-list`,
-  `view-family-favorites`, `view-revision-log`). Admin-Account = reine Verwaltung: wünscht nicht,
+  `view-family-favorites`, `view-revision-log`, `manage-body-profile`). Admin-Account = reine Verwaltung: wünscht nicht,
   fehlt in der Familien-Übersicht (Papa/Mama sind `adult`). Familien-Seite: alle Erwachsenen;
   Rezepte löschen, Benutzerverwaltung und Änderungsprotokoll: nur Admin.
 - Model `MealSuggestion` = ein **Wunsch** (UI sagt „Wunsch/wünschen“, Tabelle heißt `meal_suggestions`).

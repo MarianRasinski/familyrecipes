@@ -23,6 +23,10 @@ Alle Berechnungen sind Orientierungswerte und zeigen ihren Rechenweg.
       Vorschläge mit Synonymliste (`FoodMatcher`), `RecipeNutrition` (gesamt/pro Portion, „geschätzt“, unvollständig),
       Nährwerte pro Portion auf der Rezeptseite, Zuordnungsassistent `/rezepte/{rezept}/naehrwerte` mit
       Lebensmittelsuche, Übersicht „Nährwerte prüfen“ (`/naehrwerte`). Zuordnungen bleiben beim Bearbeiten erhalten.
+- [x] **Profil & Ziele mit Tagesbudget:** Tabelle `body_profiles` (eine pro Person, nur Erwachsene, nur selbst sichtbar),
+      Seite `/profil`; `EnergyBudget`: Mifflin-St Jeor × PAL ± Ziel = Ruhetag, + Trainingsverbrauch (MET) = Trainingstag,
+      Wochenschnitt, Makros (Eiweiß je kg mit BMI-Bezugsgewicht, Fett 30 %, KH Rest, Ballaststoffe 30 g), eigenes Budget
+      optional, Rechenweg und Warnung unter Grundumsatz. Werte in `config/nutrition.php` (`budget`).
 
 ## Grundversion (Dashboard, Wochenplaner, Rezeptdatenbank, Nährwertberechnung)
 
@@ -34,12 +38,10 @@ Alle Berechnungen sind Orientierungswerte und zeigen ihren Rechenweg.
   - [ ] Synonymliste nach echten Zuordnungen erweitern (häufige Korrekturen im Assistenten übernehmen)
   - [ ] Filter: High Protein, Low Carb, Schnell (berechnet), Vegetarisch/Vegan (aus Zutaten), Meal Prep geeignet (Feld)
   - [ ] Portionen umrechnen auf der Rezeptseite (`Quantity` vorhanden)
-- [ ] **Profil & Ziele (pro Person)** – vorerst nur Erwachsene; jeder sieht nur sein eigenes Profil (Entscheidung 08.11.2026)
-  - [ ] Gewicht, Größe, Alter, Geschlecht, Aktivitätslevel, Trainingshäufigkeit/-art, Ziel (Aufbau/Abbau/Halten)
-  - [ ] Grundumsatz (Mifflin-St Jeor) → Gesamtbedarf (PAL) → Zielkalorien und Makros, Rechenweg sichtbar
-  - [ ] **Tagesbudget für Kalorien** (Wunsch des Nutzers): berechnet aus dem Profil oder selbst festgelegt, dazu
-        Makro-Ziele; Grundlage für Planer und Dashboard
-  - [ ] Getrennte Zielwerte für Trainings- und Ruhetage
+- [ ] **Profil & Ziele ausbauen** (Grundversion erledigt, siehe oben)
+  - [ ] Makro-Ziele selbst festlegen (heute nur das kcal-Budget; Eiweiß/Fett werden immer berechnet)
+  - [ ] Gewicht mit Datum speichern statt überschreiben → Grundlage für „Fortschritt“
+  - [ ] Budget auf der Startseite/im Dashboard anzeigen; konkrete Trainingstage aus dem Trainingsplan statt Anzahl
 - [ ] **Persönlicher Wochenplaner**
   - [ ] **Mehrere Mahlzeiten an einem Tag** (Wunsch des Nutzers): Frühstück, Mittag, Abend, Snacks – je Mahlzeit
         auch mehrere Rezepte oder Lebensmittel

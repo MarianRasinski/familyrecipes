@@ -262,16 +262,32 @@ Jede Zutat kann mit einem Lebensmittel aus dem BLS verknüpft werden. Daraus ber
 - Annahmen (Gewichte, Synonyme, Gewürze): `config/nutrition.php`. Code: `app/Support/Nutrition/`
   (`IngredientWeight`, `FoodMatcher`, `IngredientNutrition`, `RecipeNutrition`).
 
+## Profil & Ziele (Tagesbudget)
+
+„Profil & Ziele“ (Benutzermenü, `/profil`) berechnet aus Geschlecht, Geburtsdatum, Größe, Gewicht, Aktivität im
+Alltag, Ziel und Training ein **Tagesbudget** für Kalorien, Eiweiß, Kohlenhydrate, Fett und Ballaststoffe.
+
+- **Nur Erwachsene** (ab 18, Rolle nicht „Kind“) – die Formeln gelten nicht für Kinder.
+- **Jeder sieht nur sein eigenes Profil**, auch das Familienoberhaupt nicht die der anderen (keine Benutzer-ID in der URL).
+- **Rechnung** (aufklappbar unter „So wird gerechnet“): Grundumsatz nach Mifflin-St Jeor × PAL (Alltag ohne Sport)
+  ± Ziel (Abnehmen −500, Halten ±0, Aufbau +300 kcal), auf 10 kcal gerundet = **Ruhetag**.
+  **Trainingstag** = Ruhetag + (MET − 1) × kg × Stunden der Einheit; dazu der Wochendurchschnitt.
+- **Makros:** Eiweiß 1,6–2,0 g je kg (bei BMI über 25 bezogen auf das Gewicht bei BMI 25), Fett 30 % der Kalorien,
+  Kohlenhydrate = Rest, Ballaststoffe 30 g.
+- **Eigenes Budget** (optional, z. B. aus der Ernährungsberatung) ersetzt das berechnete Ziel an Ruhetagen.
+- Hinweis, wenn das Budget unter dem Grundumsatz liegt. Alle Werte: `config/nutrition.php` (`budget`),
+  Code: `app/Support/Nutrition/EnergyBudget.php`, Tabelle `body_profiles`.
+
 ## Aufbau
 
 | Bereich | Ort |
 | --- | --- |
-| Models | `app/Models` – `Recipe`, `Ingredient`, `Step`, `Tag`, `User`, `RecipeRevision`, `MealSuggestion`, `MealPlanEntry`, `Exercise`, `Equipment`, `MuscleGroup`, `Food` |
-| Enums | `app/Enums` – `Difficulty`, `Role`, `RevisionAction`, `ExerciseLevel`, `ExerciseMeasure`, `FoodCategory` |
+| Models | `app/Models` – `Recipe`, `Ingredient`, `Step`, `Tag`, `User`, `RecipeRevision`, `MealSuggestion`, `MealPlanEntry`, `Exercise`, `Equipment`, `MuscleGroup`, `Food`, `BodyProfile` |
+| Enums | `app/Enums` – `Difficulty`, `Role`, `RevisionAction`, `ExerciseLevel`, `ExerciseMeasure`, `FoodCategory`, `Sex`, `ActivityLevel`, `FitnessGoal`, `TrainingType` |
 | Kalenderwoche | `app/Support/Week.php` (ISO-Woche, offen = diese und nächste Woche) |
 | Speichern/Löschen inkl. Protokoll | `app/Actions/SaveRecipe.php`, `app/Actions/DeleteRecipe.php` |
 | Validierung | `app/Http/Requests` |
-| Berechtigungen | `app/Policies` (`RecipePolicy`, `UserPolicy`), Gates `view-family-favorites` und `view-revision-log` in `AppServiceProvider` |
+| Berechtigungen | `app/Policies` (`RecipePolicy`, `UserPolicy`), Gates `view-family-favorites`, `view-revision-log` und `manage-body-profile` in `AppServiceProvider` |
 | Controller | `app/Http/Controllers` – Rezepte, Verlauf, Favoriten, Familie, Änderungsprotokoll, Benutzer, Konto, Login |
 | Views | `resources/views`, Layouts unter `resources/views/components/layouts` |
 | Artisan-Befehle | `users:create`, `recipes:import`, `exercises:import`, `foods:import` (`app/Console/Commands`) |

@@ -133,4 +133,52 @@ return [
     'negligible' => ['salz', 'pfeffer', 'gewürzmischung', 'gewürzsalz', 'muskat', 'chili', 'paprikapulver', 'oregano', 'thymian', 'rosmarin',
         'kräuter', 'dill', 'msg', 'glutamat', 'zimt', 'kreuzkümmel', 'curry', 'kurkuma', 'flavor', 'aroma', 'süßstoff', 'backpulver', 'natron'],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Tagesbudget (Profil & Ziele, App\Support\Nutrition\EnergyBudget)
+    |--------------------------------------------------------------------------
+    |
+    | Grundumsatz nach Mifflin-St Jeor × PAL (Alltag ohne Sport) = Gesamtbedarf am Ruhetag,
+    | ± Ziel-Zuschlag = Zielkalorien. An Trainingstagen kommt der Trainingsverbrauch dazu:
+    | (MET − 1) × kg × Stunden (netto, der Grundumsatz ist schon enthalten).
+    | Orientierungswerte für gesunde Erwachsene – keine medizinische Beratung.
+    |
+    */
+    'budget' => [
+
+        // PAL-Werte angelehnt an die DGE-Referenzwerte (Sport ist hier bewusst nicht enthalten)
+        'pal' => [
+            'sedentary' => 1.4,
+            'light' => 1.6,
+            'active' => 1.8,
+            'heavy' => 2.0,
+        ],
+
+        // kcal-Zuschlag pro Tag und Eiweiß in g je kg (Bezugs-)Körpergewicht
+        'goals' => [
+            'lose' => ['kcal' => -500, 'protein_per_kg' => 2.0],     // ≈ 0,5 kg weniger pro Woche
+            'maintain' => ['kcal' => 0, 'protein_per_kg' => 1.6],
+            'gain' => ['kcal' => 300, 'protein_per_kg' => 1.8],
+        ],
+
+        // Eiweiß wird bei einem BMI darüber auf das Gewicht bei diesem BMI bezogen (sonst zu hoch)
+        'protein_reference_bmi' => 25,
+
+        // Anteil der Kalorien aus Fett; Kohlenhydrate bekommen den Rest
+        'fat_share' => 0.30,
+
+        // Ballaststoffe in g pro Tag (DGE-Richtwert)
+        'fiber' => 30,
+
+        // MET-Werte je Trainingsart (Compendium of Physical Activities, gerundet)
+        'training_met' => [
+            'strength' => 5.0,
+            'mixed' => 6.0,
+            'cardio' => 7.0,
+        ],
+
+        // Kalorienziele werden auf diese Schrittweite gerundet
+        'round_to' => 10,
+    ],
+
 ];

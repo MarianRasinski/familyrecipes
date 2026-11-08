@@ -94,6 +94,9 @@
                             @can('create', App\Models\Recipe::class)
                                 <a href="{{ route('nutrition.overview') }}" class="block px-4 py-2 hover:bg-paper">Nährwerte prüfen</a>
                             @endcan
+                            @can('manage-body-profile')
+                                <a href="{{ route('body-profile.edit') }}" class="block px-4 py-2 hover:bg-paper">Profil &amp; Ziele</a>
+                            @endcan
                             <a href="{{ route('account.edit') }}" class="block px-4 py-2 hover:bg-paper">Mein Konto</a>
                             @can('viewAny', App\Models\User::class)
                                 <a href="{{ route('users.index') }}" class="block px-4 py-2 hover:bg-paper">Benutzer verwalten</a>

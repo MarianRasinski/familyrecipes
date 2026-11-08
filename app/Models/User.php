@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -72,6 +73,14 @@ class User extends Authenticatable
     public function mealSuggestions(): HasMany
     {
         return $this->hasMany(MealSuggestion::class);
+    }
+
+    /**
+     * Körperdaten und Ziel (Profil & Ziele) – nur für die Person selbst sichtbar.
+     */
+    public function bodyProfile(): HasOne
+    {
+        return $this->hasOne(BodyProfile::class);
     }
 
     /**

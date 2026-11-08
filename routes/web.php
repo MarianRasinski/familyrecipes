@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BodyProfileController;
 use App\Http\Controllers\CookingModeController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\FamilyFavoritesController;
@@ -77,6 +78,10 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::get('naehrwerte', NutritionOverviewController::class)->name('nutrition.overview');
     Route::get('rezepte/{recipe}/naehrwerte', [RecipeNutritionController::class, 'edit'])->name('recipes.nutrition.edit');
     Route::put('rezepte/{recipe}/naehrwerte', [RecipeNutritionController::class, 'update'])->name('recipes.nutrition.update');
+
+    // Profil & Ziele: immer nur das eigene Profil (Erwachsene, Gate manage-body-profile).
+    Route::get('profil', [BodyProfileController::class, 'edit'])->name('body-profile.edit');
+    Route::put('profil', [BodyProfileController::class, 'update'])->name('body-profile.update');
 
     Route::get('konto', [AccountController::class, 'edit'])->name('account.edit');
     Route::put('konto/passwort', [AccountController::class, 'updatePassword'])->name('account.password');

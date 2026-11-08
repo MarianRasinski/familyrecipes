@@ -49,6 +49,9 @@ class AppServiceProvider extends ServiceProvider
         // Einkaufsliste: für alle, die den Plan festlegen (Erwachsene).
         Gate::define('view-shopping-list', fn (User $user) => $user->role->canPlanMeals());
 
+        // Profil & Ziele: vorerst nur Erwachsene (die Formeln gelten nicht für Kinder).
+        Gate::define('manage-body-profile', fn (User $user) => $user->role !== Role::Child);
+
         Route::bind('week', fn (string $value) => Week::fromRouteKey($value));
     }
 }
