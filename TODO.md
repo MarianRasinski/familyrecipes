@@ -48,7 +48,7 @@ Alle Berechnungen sind Orientierungswerte und zeigen ihren Rechenweg.
   - [ ] Budget auf der Startseite/im Dashboard anzeigen; konkrete Trainingstage aus dem Trainingsplan statt Anzahl
 - [ ] **Persönlicher Wochenplaner ausbauen** (Grundversion erledigt, siehe oben)
   - [ ] Tag/Mahlzeit kopieren („wie gestern“), Einträge zwischen Mahlzeiten verschieben
-  - [ ] Drag & Drop am Desktop (braucht neues JS → Build-Weg klären)
+  - [ ] Drag & Drop am Desktop (braucht neues JS → Build auf einem Rechner mit Node, `public/build` mitcommitten)
   - [ ] Verhältnis zum Familien-Essensplan klären (Gericht des Tages als Vorschlag fürs Abendessen übernehmen?)
   - [ ] Eigene Lebensmittel/Fertigprodukte anlegen (z. B. Proteinriegel mit Herstellerangaben)
 - [ ] **Dashboard:** Tagesziele mit Fortschrittsringen, verbleibende kcal/Makros, heutige Mahlzeiten, Wochenübersicht
@@ -79,7 +79,8 @@ Alle Berechnungen sind Orientierungswerte und zeigen ihren Rechenweg.
 
 ## Bekannte Grenzen / Notizen
 
-- Auf dem PC ist absichtlich kein Node installiert → `public/build` wird mit ins Git eingetragen. Der Übungskatalog
-  nutzt nur bestehende CSS-Klassen (geprüft). Für neue Oberflächen (Dashboard, Planer) braucht es einen Build-Weg,
-  z. B. GitHub Actions, der `public/build` baut und committet.
+- Auf dem PC ist absichtlich kein Node installiert → `public/build` wird bei jeder Design-Änderung mit ins Git
+  eingetragen – **das bleibt so** (Entscheidung 08.11.2026, kein automatischer Build über GitHub Actions o. Ä.).
+  Übungskatalog, Profil und „Mein Plan“ nutzen nur bestehende CSS-Klassen (geprüft); neue Klassen oder JS-Module
+  erst nach einem Build auf einem Rechner mit Node, der `public/build` mitcommittet.
 - Gerätevariante „Verstellbare Kurzhanteln“ erscheint als Ausführung „Verstellbare“.

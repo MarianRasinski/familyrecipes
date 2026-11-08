@@ -43,7 +43,8 @@ der Ausbauplan in **`TODO.md`**.
 - XAMPP 8.2.12 unter `C:\xampp`: PHP 8.2 (`C:\xampp\php`, Erweiterungen: pdo_mysql, mbstring, curl,
   fileinfo, zip, openssl …; **ohne GD und intl**), Apache 2.4, MariaDB 10.4. **Node/npm ist absichtlich nicht
   installiert** (Entscheidung des Nutzers) → der fertige Build `public/build` wird bei jeder Design-Änderung mit ins
-  Git eingetragen; der PC holt ihn nur per `git pull`. Neue Tailwind-Klassen erst nach einem Build woanders nutzen,
+  Git eingetragen; der PC holt ihn nur per `git pull`. **Das bleibt so** (Entscheidung 08.11.2026 – keinen CI-Build
+  vorschlagen). Neue Tailwind-Klassen erst nach einem Build woanders nutzen,
   sonst nur Klassen, die schon in `public/build/assets/*.css` stehen (vorher prüfen).
 - Apache: `Listen 80`, VirtualHost in `C:\xampp\apache\conf\extra\familyrecipes-vhost.conf` (eingebunden in
   `httpd-vhosts.conf`, angelegt 29.10.2026) → `public/`, Zugriff nur lokal + `192.168.2.0/24`.
