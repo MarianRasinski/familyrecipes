@@ -178,6 +178,57 @@ class WorkoutLogTest extends TestCase
         $this->get(route('workout-sessions.show', $session))->assertOk()->assertSee('Ganzkörper A');
     }
 
+    public function test_sets_can_be_added_and_removed_during_training(): void
+    {
+        $session = $this->start();
+        $squats = fn () => $session->sets()->where('exercise_id', $this->squat->id)->get();
+        [$first, $second] = $squats();
+
+        // Satz hinzufügen: Eingaben bleiben, neuer Satz übernimmt Gewicht und Ziel des letzten
+        $this->put(route('workout-sessions.update', $session), [
+            'sets' => [$squats()->last()->id => ['reps' => '10', 'weight_kg' => '18']],
+            'add_set' => 1,
+        ])->assertRedirect(route('workout-sessions.show', $session).'#uebung-1');
+
+        $this->assertSame([1, 2, 3, 4], $squats()->pluck('set_number')->all());
+        $this->assertSame(18.0, $squats()->last()->weight_kg);
+        $this->assertSame('10-12', $squats()->last()->target);
+        $this->assertNull($squats()->last()->reps);
+
+        // Satz 2 entfernen → Nummern rücken nach
+        $this->put(route('workout-sessions.update', $session), ['remove_set' => $second->id])
+            ->assertRedirect(route('workout-sessions.show', $session).'#uebung-1');
+        $this->assertModelMissing($second);
+        $this->assertSame([1, 2, 3], $squats()->pluck('set_number')->all());
+        $this->assertTrue($first->is($squats()->first()));
+
+        // Fremde Sätze lassen sich nicht entfernen
+        $foreign = WorkoutSession::factory()->create();
+        $foreignSet = $foreign->sets()->create(['exercise_id' => $this->squat->id, 'position' => 1, 'set_number' => 1]);
+        $this->put(route('workout-sessions.update', $session), ['remove_set' => $foreignSet->id])->assertSessionHasErrors('remove_set');
+        $this->assertModelExists($foreignSet);
+    }
+
+    public function test_exercise_page_shows_progress_chart(): void
+    {
+        foreach (['2026-10-01' => 16, '2026-10-05' => 18, '2026-10-09' => 20] as $date => $weight) {
+            $session = WorkoutSession::factory()->for($this->user)->finished()->create(['date' => $date]);
+            $session->sets()->create(['exercise_id' => $this->squat->id, 'position' => 1, 'set_number' => 1, 'reps' => 10, 'weight_kg' => $weight, 'done' => true]);
+        }
+
+        $response = $this->get(route('exercises.show', $this->squat))->assertOk();
+
+        $chart = $response->viewData('chart');
+        $this->assertSame('Gewicht im besten Satz', $chart['title']);
+        $this->assertSame([16.0, 18.0, 20.0], array_column($chart['points'], 'value'));
+        $this->assertSame(['01.10.', '05.10.', '09.10.'], array_column($chart['points'], 'label'));
+        $response->assertSee('aria-label="Gewicht im besten Satz: von 16 auf 20 kg"', false)
+            ->assertSee('<title>09.10.: 10 × 20 kg</title>', false);
+
+        // Nur ein Training → kein Diagramm, nur die Liste
+        $this->assertNull(ExerciseHistory::chart(ExerciseHistory::progress($this->user, $this->plank->id)));
+    }
+
     public function test_dashboard_offers_start_and_shows_done(): void
     {
         $this->user->scheduledWorkouts()->create(['weekday' => 3, 'workout_id' => $this->workout->id]);

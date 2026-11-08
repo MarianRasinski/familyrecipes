@@ -42,10 +42,13 @@ class ExerciseController extends Controller
     {
         $exercise->load(['equipment', 'muscleGroups']);
 
+        // Eigener Verlauf aus dem Trainingsprotokoll (nur die angemeldete Person)
+        $progress = ExerciseHistory::progress($request->user(), $exercise->id);
+
         return view('exercises.show', [
             'exercise' => $exercise,
-            // Eigener Verlauf aus dem Trainingsprotokoll (nur die angemeldete Person)
-            'progress' => ExerciseHistory::progress($request->user(), $exercise->id),
+            'progress' => $progress,
+            'chart' => ExerciseHistory::chart($progress),
         ]);
     }
 }

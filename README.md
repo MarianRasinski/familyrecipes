@@ -249,7 +249,9 @@ Unter „Übungen“ (für alle Familienmitglieder lesbar) steht der Übungskata
 - Je Satz **Wiederholungen** (bzw. **Sekunden** bei Zeitübungen) und **Gewicht** eintragen, abhaken,
   „Zwischenspeichern“ oder „Training abschließen“. Abgeschlossene Tage zählen in „Mein Plan“ als Trainingstag.
 - **Protokoll** (`/training/protokoll`): alle Trainings mit erledigten Sätzen und bewegtem Gewicht (Wdh. × kg).
-- **Mein Verlauf** auf jeder Übungsseite: bester Satz je Training. Alles nur für die Person selbst sichtbar.
+- Während des Trainings: „＋ Satz“ (übernimmt Ziel und Gewicht des letzten Satzes) und ✕ zum Entfernen eines Satzes.
+- **Mein Verlauf** auf jeder Übungsseite: Liniendiagramm (bestes Gewicht, sonst Wiederholungen/Sekunden; ab zwei
+  Trainings, SVG ohne Build) und Liste des besten Satzes je Training. Alles nur für die Person selbst sichtbar.
 - Name und Ziel werden beim Start kopiert – das Protokoll bleibt richtig, auch wenn die Einheit später geändert
   oder gelöscht wird.
 

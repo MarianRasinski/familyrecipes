@@ -77,7 +77,8 @@ Alle Berechnungen sind Orientierungswerte und zeigen ihren Rechenweg.
   - [ ] Weitere Vorlagen (Ober-/Unterkörper, Push/Pull), Einheit kopieren
   - [x] Trainingseinheiten eintragen/abhaken (tatsächliche Sätze, Wdh., Gewicht bzw. Dauer): Protokoll mit
         Vorbelegung vom letzten Mal, „Mein Verlauf“ je Übung, Start von der Startseite
-  - [ ] Protokoll: Pausen-Timer zwischen Sätzen (braucht JS → Build), Sätze hinzufügen/entfernen, Diagramm des Verlaufs
+  - [x] Protokoll: Sätze hinzufügen/entfernen, Verlaufsdiagramm je Übung (SVG, `<x-progress-chart>`)
+  - [ ] Protokoll: Pausen-Timer zwischen Sätzen (braucht JS → Build)
   - [ ] Trainingstag ↔ Ruhetag steuert die Tagesziele; anstehende Einheiten auf dem Dashboard
   - [ ] Empfehlungen vor/nach dem Training
   - [ ] Übungen im Browser anlegen/bearbeiten (heute nur per Import)

@@ -120,7 +120,8 @@ php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_
 - Trainingsprotokoll (`/training/protokoll`): `WorkoutSession` (user_id, workout_id nullOnDelete, name/date-Kopie,
   finished_at) → `WorkoutSet` (exercise_id, position, set_number, target-Kopie, reps/seconds/weight_kg, done).
   `StartWorkoutSession` (laufendes Training von heute wiederverwenden, Gewicht aus `ExerciseHistory::lastSets()`),
-  `SaveWorkoutSession` (finish → `ToggleTrainingDay` true). `ExerciseHistory::progress()` für „Mein Verlauf“.
+  `SaveWorkoutSession` (finish → `ToggleTrainingDay` true). `ExerciseHistory::progress()`/`chart()` für „Mein Verlauf“ (`<x-progress-chart>`, SVG).
+  `SaveWorkoutSession` nimmt `add_set` (Position) / `remove_set` (Satz-ID) – Submit-Knöpfe im selben Formular.
   `WorkoutSessionPolicy` = nur Besitzer. Route-Parameter `{workoutSession}`.
 - Rechte: `App\Enums\Role` (admin/adult/child), Policies `RecipePolicy`, `UserPolicy`,
   `MealSuggestionPolicy`, `PlannedMealPolicy`, `WorkoutPolicy`, `WorkoutSessionPolicy`, Gates in `AppServiceProvider` (`make-wishes`, `plan-meals`, `view-shopping-list`,

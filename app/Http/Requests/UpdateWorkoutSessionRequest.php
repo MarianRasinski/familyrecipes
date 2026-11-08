@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * Trainingsprotokoll speichern: je Satz Wiederholungen bzw. Sekunden, Gewicht und „erledigt“.
@@ -27,6 +28,8 @@ class UpdateWorkoutSessionRequest extends FormRequest
             'sets.*.done' => ['nullable', 'boolean'],
             'notes' => ['nullable', 'string', 'max:2000'],
             'finish' => ['nullable', 'boolean'],
+            'add_set' => ['nullable', 'integer', 'min:1'],
+            'remove_set' => ['nullable', 'integer', Rule::exists('workout_sets', 'id')->where('workout_session_id', $this->route('workoutSession')->id)],
         ];
     }
 

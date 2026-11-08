@@ -48,6 +48,37 @@ final class ExerciseHistory
     }
 
     /**
+     * Daten fürs Verlaufsdiagramm (älteste zuerst): bestes Gewicht – oder Wiederholungen bzw. Sekunden,
+     * wenn ohne Gewicht trainiert wurde. null bei weniger als zwei Trainings.
+     *
+     * @param  Collection<int, array{date: CarbonInterface, best: WorkoutSet, sets: int}>  $progress  aus progress()
+     * @return array{title: string, unit: string, points: list<array{label: string, value: float, text: string}>}|null
+     */
+    public static function chart(Collection $progress): ?array
+    {
+        if ($progress->count() < 2) {
+            return null;
+        }
+
+        $best = $progress->pluck('best');
+        [$field, $title, $unit] = match (true) {
+            $best->contains(fn (WorkoutSet $set) => $set->weight_kg > 0) => ['weight_kg', 'Gewicht im besten Satz', 'kg'],
+            $best->contains(fn (WorkoutSet $set) => $set->seconds > 0) => ['seconds', 'Dauer im besten Satz', 's'],
+            default => ['reps', 'Wiederholungen im besten Satz', 'Wdh.'],
+        };
+
+        return [
+            'title' => $title,
+            'unit' => $unit,
+            'points' => $progress->reverse()->values()->map(fn (array $entry) => [
+                'label' => $entry['date']->format('d.m.'),
+                'value' => (float) ($entry['best']->{$field} ?? 0),
+                'text' => $entry['best']->resultLabel(),
+            ])->all(),
+        ];
+    }
+
+    /**
      * @param  iterable<int>  $exerciseIds
      * @return Collection<int, WorkoutSet> neueste Trainings zuerst
      */

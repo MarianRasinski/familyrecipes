@@ -58,12 +58,22 @@ class WorkoutSessionController extends Controller
     public function update(UpdateWorkoutSessionRequest $request, WorkoutSession $workoutSession, SaveWorkoutSession $save): RedirectResponse
     {
         $finish = $request->boolean('finish');
+        $addSetAt = $request->filled('add_set') ? (int) $request->validated('add_set') : null;
+        $removeSet = $request->filled('remove_set') ? (int) $request->validated('remove_set') : null;
+        // Nach dem Hinzufügen/Entfernen zurück zur selben Übung springen
+        $position = $addSetAt ?? ($removeSet ? $workoutSession->sets()->whereKey($removeSet)->value('position') : null);
 
-        $save->handle($workoutSession, $request->validated('sets') ?? [], $request->validated('notes'), $finish);
+        $save->handle($workoutSession, $request->validated('sets') ?? [], $request->validated('notes'), $finish, $addSetAt, $removeSet);
 
-        return $finish
-            ? to_route('workout-sessions.index')->with('status', 'Training abgeschlossen – stark! 💪')
-            : to_route('workout-sessions.show', $workoutSession)->with('status', 'Zwischengespeichert.');
+        if ($finish) {
+            return to_route('workout-sessions.index')->with('status', 'Training abgeschlossen – stark! 💪');
+        }
+
+        $redirect = to_route('workout-sessions.show', $workoutSession);
+
+        return $position
+            ? $redirect->withFragment('uebung-'.$position)
+            : $redirect->with('status', 'Zwischengespeichert.');
     }
 
     public function destroy(WorkoutSession $workoutSession): RedirectResponse

@@ -28,7 +28,7 @@
                     $previous = $last->get($exercise->id);
                     $timed = $sets->first()->isTimed();
                 @endphp
-                <fieldset class="card-section space-y-3">
+                <fieldset id="uebung-{{ $sets->first()->position }}" class="card-section scroll-mt-24 space-y-3">
                     <legend class="sr-only">{{ $exercise->name }}</legend>
                     <div>
                         <p class="flex flex-wrap items-baseline justify-between gap-x-4">
@@ -82,12 +82,18 @@
                                     kg
                                 </label>
 
+                                @if ($sets->count() > 1)
+                                    <button type="submit" name="remove_set" value="{{ $set->id }}" class="ml-auto grid size-8 place-items-center rounded-full text-ink-soft hover:bg-paper-deep hover:text-accent-dark"
+                                            aria-label="Satz {{ $set->set_number }} von {{ $exercise->name }} entfernen" title="Satz entfernen">✕</button>
+                                @endif
+
                                 @foreach (['reps', 'seconds', 'weight_kg'] as $field)
                                     @error("{$key}.{$field}") <p class="field-error w-full">{{ $message }}</p> @enderror
                                 @endforeach
                             </li>
                         @endforeach
                     </ol>
+                    <button type="submit" name="add_set" value="{{ $sets->first()->position }}" class="text-sm font-semibold text-accent hover:text-ink">＋ Satz</button>
                 </fieldset>
             @endforeach
 

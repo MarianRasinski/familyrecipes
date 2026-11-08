@@ -75,6 +75,12 @@
             <section class="card-section mt-6" aria-labelledby="verlauf">
                 <h2 id="verlauf" class="mb-1 font-display text-xl font-semibold">Mein Verlauf</h2>
                 <p class="mb-4 text-sm text-ink-soft">Bester Satz je Training (nur für dich sichtbar).</p>
+                @if ($chart)
+                    <figure class="mb-4">
+                        <figcaption class="mb-2 text-sm font-semibold">{{ $chart['title'] }}</figcaption>
+                        <x-progress-chart :points="$chart['points']" :unit="$chart['unit']" :label="$chart['title']" />
+                    </figure>
+                @endif
                 <ol class="divide-y divide-line">
                     @foreach ($progress as $entry)
                         <li class="flex items-center justify-between gap-3 py-2.5 text-sm">
