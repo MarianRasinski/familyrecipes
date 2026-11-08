@@ -117,8 +117,13 @@ php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_
   (`SaveWorkout` mit `remove`/`move` = Submit-Knöpfe im selben Formular, `CreateWorkoutFromTemplate`,
   `AddExerciseToWorkout`, `SaveTrainingSchedule`). `WorkoutPolicy` = nur Besitzer. Übungsauswahl nutzt `recipePicker`
   (Daten als id/title/emoji/favorite). Standardwerte `config/training.php`.
+- Trainingsprotokoll (`/training/protokoll`): `WorkoutSession` (user_id, workout_id nullOnDelete, name/date-Kopie,
+  finished_at) → `WorkoutSet` (exercise_id, position, set_number, target-Kopie, reps/seconds/weight_kg, done).
+  `StartWorkoutSession` (laufendes Training von heute wiederverwenden, Gewicht aus `ExerciseHistory::lastSets()`),
+  `SaveWorkoutSession` (finish → `ToggleTrainingDay` true). `ExerciseHistory::progress()` für „Mein Verlauf“.
+  `WorkoutSessionPolicy` = nur Besitzer. Route-Parameter `{workoutSession}`.
 - Rechte: `App\Enums\Role` (admin/adult/child), Policies `RecipePolicy`, `UserPolicy`,
-  `MealSuggestionPolicy`, `PlannedMealPolicy`, `WorkoutPolicy`, Gates in `AppServiceProvider` (`make-wishes`, `plan-meals`, `view-shopping-list`,
+  `MealSuggestionPolicy`, `PlannedMealPolicy`, `WorkoutPolicy`, `WorkoutSessionPolicy`, Gates in `AppServiceProvider` (`make-wishes`, `plan-meals`, `view-shopping-list`,
   `view-family-favorites`, `view-revision-log`, `manage-body-profile`). Admin-Account = reine Verwaltung: wünscht nicht,
   fehlt in der Familien-Übersicht (Papa/Mama sind `adult`). Familien-Seite: alle Erwachsenen;
   Rezepte löschen, Benutzerverwaltung und Änderungsprotokoll: nur Admin.

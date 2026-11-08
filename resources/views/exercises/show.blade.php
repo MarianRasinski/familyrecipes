@@ -40,7 +40,7 @@
                 <h2 class="mb-3 font-display text-xl font-semibold">Geräte</h2>
                 @forelse ($exercise->equipment as $item)
                     <p>
-                        <a href="{{ route('exercises.index', ['geraet' => $item->slug]) }}" class="hover:text-accent">{{ $item->name }}</a>
+                        <a href="{{ route('exercises.index', ['geraet' => $item->slug]) }}" class="hover:text-accent-dark">{{ $item->name }}</a>
                         @if ($item->pivot->is_optional)
                             <span class="text-sm text-ink-soft">(optional)</span>
                         @endif
@@ -70,5 +70,21 @@
                 @endif
             @endforeach
         </section>
+
+        @if ($progress->isNotEmpty())
+            <section class="card-section mt-6" aria-labelledby="verlauf">
+                <h2 id="verlauf" class="mb-1 font-display text-xl font-semibold">Mein Verlauf</h2>
+                <p class="mb-4 text-sm text-ink-soft">Bester Satz je Training (nur für dich sichtbar).</p>
+                <ol class="divide-y divide-line">
+                    @foreach ($progress as $entry)
+                        <li class="flex items-center justify-between gap-3 py-2.5 text-sm">
+                            <span class="text-ink-soft">{{ $entry['date']->format('d.m.Y') }}</span>
+                            <span class="font-semibold tabular-nums">{{ $entry['best']->resultLabel() }}</span>
+                            <span class="text-xs text-ink-soft">{{ $entry['sets'] }} {{ $entry['sets'] === 1 ? 'Satz' : 'Sätze' }}</span>
+                        </li>
+                    @endforeach
+                </ol>
+            </section>
+        @endif
     </article>
 </x-layouts.app>

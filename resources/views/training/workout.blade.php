@@ -15,6 +15,13 @@
             </p>
         </div>
 
+        @if ($workout->exercises->isNotEmpty())
+            <form method="POST" action="{{ route('workout-sessions.store', $workout) }}" class="mb-8">
+                @csrf
+                <button type="submit" class="btn btn-primary w-full">▶ Training starten</button>
+            </form>
+        @endif
+
         {{-- Einheit mit allen Übungen (ein Formular; ↑ ↓ und Entfernen speichern die Eingaben mit) --}}
         <form method="POST" action="{{ route('workouts.update', $workout) }}" class="mb-8 space-y-4">
             @csrf

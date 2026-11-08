@@ -10,7 +10,10 @@
             <h1 class="font-display text-4xl font-semibold tracking-tight sm:text-5xl">Training</h1>
             <p class="mt-2 text-ink-soft">Einheiten aus dem Übungskatalog zusammenstellen und auf die Woche verteilen.</p>
         </div>
-        <a href="{{ route('exercises.index') }}" class="btn btn-ghost">Übungskatalog</a>
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ route('workout-sessions.index') }}" class="btn btn-ghost">Protokoll</a>
+            <a href="{{ route('exercises.index') }}" class="btn btn-ghost">Übungskatalog</a>
+        </div>
     </div>
 
     <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
@@ -82,6 +85,26 @@
                     </ul>
                 @endif
             </section>
+
+            @if ($recentSessions->isNotEmpty())
+                <section aria-labelledby="zuletzt">
+                    <div class="mb-3 flex items-baseline justify-between gap-3">
+                        <h2 id="zuletzt" class="font-display text-xl font-semibold">Zuletzt trainiert</h2>
+                        <a href="{{ route('workout-sessions.index') }}" class="text-sm font-medium text-ink-soft hover:text-ink">Protokoll →</a>
+                    </div>
+                    <ul class="divide-y divide-line overflow-hidden rounded-3xl border border-line bg-white">
+                        @foreach ($recentSessions as $session)
+                            <li>
+                                <a href="{{ route('workout-sessions.show', $session) }}" class="flex items-center gap-3 px-5 py-3 text-sm hover:bg-paper">
+                                    <span class="w-16 shrink-0 text-ink-soft">{{ $session->date->format('d.m.') }}</span>
+                                    <span class="min-w-0 flex-1 font-semibold">{{ $session->name }}</span>
+                                    <span class="text-xs text-ink-soft">{{ $session->isFinished() ? '✓' : 'läuft' }}</span>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </section>
+            @endif
 
             {{-- Neue Einheit --}}
             <form method="POST" action="{{ route('workouts.store') }}" class="card-section space-y-3">

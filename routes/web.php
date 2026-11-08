@@ -25,6 +25,7 @@ use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishController;
 use App\Http\Controllers\WorkoutController;
+use App\Http\Controllers\WorkoutSessionController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -88,6 +89,13 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::put('training/einheiten/{workout}', [WorkoutController::class, 'update'])->name('workouts.update');
     Route::delete('training/einheiten/{workout}', [WorkoutController::class, 'destroy'])->name('workouts.destroy');
     Route::post('training/einheiten/{workout}/uebungen', [WorkoutController::class, 'addExercise'])->name('workouts.exercises.store');
+
+    // Trainingsprotokoll: Training starten, Sätze eintragen, abschließen (nur eigene, WorkoutSessionPolicy).
+    Route::post('training/einheiten/{workout}/starten', [WorkoutSessionController::class, 'store'])->name('workout-sessions.store');
+    Route::get('training/protokoll', [WorkoutSessionController::class, 'index'])->name('workout-sessions.index');
+    Route::get('training/protokoll/{workoutSession}', [WorkoutSessionController::class, 'show'])->name('workout-sessions.show');
+    Route::put('training/protokoll/{workoutSession}', [WorkoutSessionController::class, 'update'])->name('workout-sessions.update');
+    Route::delete('training/protokoll/{workoutSession}', [WorkoutSessionController::class, 'destroy'])->name('workout-sessions.destroy');
 
     // Übungskatalog (nur lesen; Import per `php artisan exercises:import`).
     Route::get('uebungen', [ExerciseController::class, 'index'])->name('exercises.index');

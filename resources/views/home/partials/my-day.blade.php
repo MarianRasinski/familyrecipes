@@ -25,14 +25,21 @@
 
     {{-- Heutiges Training laut Trainingsplan --}}
     @if ($myDay->workout)
-        <a href="{{ route('workouts.edit', $myDay->workout) }}" class="mb-5 flex items-center gap-3 rounded-2xl bg-paper px-4 py-3 text-sm hover:bg-paper-deep">
+        <div class="mb-5 flex flex-wrap items-center gap-3 rounded-2xl bg-paper px-4 py-3 text-sm">
             <span class="text-2xl" aria-hidden="true">🏋️</span>
-            <span class="min-w-0 flex-1">
+            <a href="{{ route('workouts.edit', $myDay->workout) }}" class="min-w-0 flex-1 hover:text-accent-dark">
                 <span class="block text-xs font-semibold tracking-widest text-ink-soft uppercase">Heute trainieren</span>
                 <span class="block font-semibold">{{ $myDay->workout->name }}</span>
-            </span>
-            <span class="text-ink-soft" aria-hidden="true">→</span>
-        </a>
+            </a>
+            @if ($todaySession?->isFinished())
+                <a href="{{ route('workout-sessions.show', $todaySession) }}" class="chip">✓ erledigt</a>
+            @else
+                <form method="POST" action="{{ route('workout-sessions.store', $myDay->workout) }}">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">{{ $todaySession ? 'Weiter' : '▶ Starten' }}</button>
+                </form>
+            @endif
+        </div>
     @endif
 
     {{-- Tagesziele --}}

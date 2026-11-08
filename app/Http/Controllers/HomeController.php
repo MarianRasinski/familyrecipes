@@ -43,6 +43,10 @@ class HomeController extends Controller
             'myPlan' => $myPlan,
             'myDay' => $myPlan->days[$today->dayOfWeekIso],
             'slots' => MealSlot::cases(),
+            // Training der heutigen Einheit (läuft oder erledigt)
+            'todaySession' => ($workout = $myPlan->days[$today->dayOfWeekIso]->workout)
+                ? $request->user()->workoutSessions()->where('workout_id', $workout->id)->whereDate('date', $today)->latest('id')->first()
+                : null,
         ]);
     }
 

@@ -75,7 +75,9 @@ Alle Berechnungen sind Orientierungswerte und zeigen ihren Rechenweg.
         auf der Startseite
   - [ ] Trainingstage-Anzahl im Profil automatisch aus dem Wochenplan übernehmen (heute nur Hinweis bei Abweichung)
   - [ ] Weitere Vorlagen (Ober-/Unterkörper, Push/Pull), Einheit kopieren
-  - [ ] Trainingseinheiten eintragen/abhaken (tatsächliche Sätze, Wdh., Gewicht bzw. Dauer)
+  - [x] Trainingseinheiten eintragen/abhaken (tatsächliche Sätze, Wdh., Gewicht bzw. Dauer): Protokoll mit
+        Vorbelegung vom letzten Mal, „Mein Verlauf“ je Übung, Start von der Startseite
+  - [ ] Protokoll: Pausen-Timer zwischen Sätzen (braucht JS → Build), Sätze hinzufügen/entfernen, Diagramm des Verlaufs
   - [ ] Trainingstag ↔ Ruhetag steuert die Tagesziele; anstehende Einheiten auf dem Dashboard
   - [ ] Empfehlungen vor/nach dem Training
   - [ ] Übungen im Browser anlegen/bearbeiten (heute nur per Import)

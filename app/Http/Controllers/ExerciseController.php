@@ -6,6 +6,7 @@ use App\Enums\ExerciseLevel;
 use App\Models\Equipment;
 use App\Models\Exercise;
 use App\Models\MuscleGroup;
+use App\Support\Training\ExerciseHistory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -37,12 +38,14 @@ class ExerciseController extends Controller
         ]);
     }
 
-    public function show(Exercise $exercise): View
+    public function show(Request $request, Exercise $exercise): View
     {
         $exercise->load(['equipment', 'muscleGroups']);
 
         return view('exercises.show', [
             'exercise' => $exercise,
+            // Eigener Verlauf aus dem Trainingsprotokoll (nur die angemeldete Person)
+            'progress' => ExerciseHistory::progress($request->user(), $exercise->id),
         ]);
     }
 }

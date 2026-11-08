@@ -110,6 +110,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Trainingsprotokoll – nur für die Person selbst sichtbar.
+     */
+    public function workoutSessions(): HasMany
+    {
+        return $this->hasMany(WorkoutSession::class);
+    }
+
+    /**
      * Initialen für Avatare, z. B. „Anna Müller“ → „AM“.
      */
     public function initials(): string

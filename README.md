@@ -241,6 +241,18 @@ Unter „Übungen“ (für alle Familienmitglieder lesbar) steht der Übungskata
   zusätzliches Training); das gilt nur für diesen Tag.
 - Standardwerte (Pause, Sätze, Größe der Vorlage): `config/training.php`.
 
+### Trainingsprotokoll
+
+- **Training starten** („▶ Training starten“ in der Einheit oder „▶ Starten“ bei „Heute trainieren“ auf der
+  Startseite): legt die geplanten Sätze an; das Gewicht vom letzten Mal ist vorausgefüllt, „Letztes Mal: …“ steht
+  bei jeder Übung. Ein zweiter Start am selben Tag führt zurück ins laufende Training.
+- Je Satz **Wiederholungen** (bzw. **Sekunden** bei Zeitübungen) und **Gewicht** eintragen, abhaken,
+  „Zwischenspeichern“ oder „Training abschließen“. Abgeschlossene Tage zählen in „Mein Plan“ als Trainingstag.
+- **Protokoll** (`/training/protokoll`): alle Trainings mit erledigten Sätzen und bewegtem Gewicht (Wdh. × kg).
+- **Mein Verlauf** auf jeder Übungsseite: bester Satz je Training. Alles nur für die Person selbst sichtbar.
+- Name und Ziel werden beim Start kopiert – das Protokoll bleibt richtig, auch wenn die Einheit später geändert
+  oder gelöscht wird.
+
 ## Lebensmittel & Nährwerte
 
 „Lebensmittel & Nährwerte“ (Benutzermenü, für alle lesbar) durchsucht 7.140 Lebensmittel aus dem
@@ -336,12 +348,12 @@ Familien-Essensplan, der weiter bestehen bleibt.
 
 | Bereich | Ort |
 | --- | --- |
-| Models | `app/Models` – `Recipe`, `Ingredient`, `Step`, `Tag`, `User`, `RecipeRevision`, `MealSuggestion`, `MealPlanEntry`, `Exercise`, `Equipment`, `MuscleGroup`, `Food`, `BodyProfile`, `PlannedMeal`, `TrainingDay`, `Workout`, `WorkoutExercise`, `ScheduledWorkout` |
+| Models | `app/Models` – `Recipe`, `Ingredient`, `Step`, `Tag`, `User`, `RecipeRevision`, `MealSuggestion`, `MealPlanEntry`, `Exercise`, `Equipment`, `MuscleGroup`, `Food`, `BodyProfile`, `PlannedMeal`, `TrainingDay`, `Workout`, `WorkoutExercise`, `ScheduledWorkout`, `WorkoutSession`, `WorkoutSet` |
 | Enums | `app/Enums` – `Difficulty`, `Role`, `RevisionAction`, `ExerciseLevel`, `ExerciseMeasure`, `FoodCategory`, `Sex`, `ActivityLevel`, `FitnessGoal`, `TrainingType`, `MealSlot` |
 | Kalenderwoche | `app/Support/Week.php` (ISO-Woche, offen = diese und nächste Woche) |
 | Speichern/Löschen inkl. Protokoll | `app/Actions/SaveRecipe.php`, `app/Actions/DeleteRecipe.php` |
 | Validierung | `app/Http/Requests` |
-| Berechtigungen | `app/Policies` (`RecipePolicy`, `UserPolicy`, `PlannedMealPolicy`, `WorkoutPolicy`), Gates `view-family-favorites`, `view-revision-log` und `manage-body-profile` in `AppServiceProvider` |
+| Berechtigungen | `app/Policies` (`RecipePolicy`, `UserPolicy`, `PlannedMealPolicy`, `WorkoutPolicy`, `WorkoutSessionPolicy`), Gates `view-family-favorites`, `view-revision-log` und `manage-body-profile` in `AppServiceProvider` |
 | Controller | `app/Http/Controllers` – Rezepte, Verlauf, Favoriten, Familie, Änderungsprotokoll, Benutzer, Konto, Login |
 | Views | `resources/views`, Layouts unter `resources/views/components/layouts` |
 | Artisan-Befehle | `users:create`, `recipes:import`, `exercises:import`, `foods:import` (`app/Console/Commands`) |

@@ -29,6 +29,7 @@ class TrainingController extends Controller
             'workouts' => $workouts,
             'schedule' => $user->scheduledWorkouts()->pluck('workout_id', 'weekday'),
             'levels' => ExerciseLevel::cases(),
+            'recentSessions' => $user->workoutSessions()->orderByDesc('date')->orderByDesc('id')->limit(5)->get(),
             'profile' => $user->can('manage-body-profile') ? $user->loadMissing('bodyProfile')->bodyProfile : null,
         ]);
     }
