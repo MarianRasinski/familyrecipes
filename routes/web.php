@@ -5,13 +5,16 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CookingModeController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\FamilyFavoritesController;
+use App\Http\Controllers\FoodController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MealPlanController;
+use App\Http\Controllers\NutritionOverviewController;
 use App\Http\Controllers\PantryItemController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\RecipeHistoryController;
 use App\Http\Controllers\RecipeImageController;
 use App\Http\Controllers\RecipeImportController;
+use App\Http\Controllers\RecipeNutritionController;
 use App\Http\Controllers\RevisionLogController;
 use App\Http\Controllers\ShoppingListController;
 use App\Http\Controllers\ToggleFavoriteController;
@@ -65,6 +68,15 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     // Übungskatalog (nur lesen; Import per `php artisan exercises:import`).
     Route::get('uebungen', [ExerciseController::class, 'index'])->name('exercises.index');
     Route::get('uebungen/{exercise}', [ExerciseController::class, 'show'])->name('exercises.show');
+
+    // Nährwerttabelle (Bundeslebensmittelschlüssel; Import per `php artisan foods:import`).
+    Route::get('lebensmittel', [FoodController::class, 'index'])->name('foods.index');
+    Route::get('lebensmittel/suche', [FoodController::class, 'search'])->name('foods.search');
+
+    // Nährwerte: Zuordnung Zutat → Lebensmittel (Erwachsene, RecipePolicy::update) und Übersicht.
+    Route::get('naehrwerte', NutritionOverviewController::class)->name('nutrition.overview');
+    Route::get('rezepte/{recipe}/naehrwerte', [RecipeNutritionController::class, 'edit'])->name('recipes.nutrition.edit');
+    Route::put('rezepte/{recipe}/naehrwerte', [RecipeNutritionController::class, 'update'])->name('recipes.nutrition.update');
 
     Route::get('konto', [AccountController::class, 'edit'])->name('account.edit');
     Route::put('konto/passwort', [AccountController::class, 'updatePassword'])->name('account.password');

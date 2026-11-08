@@ -63,10 +63,11 @@ class RecipeController extends Controller
 
     public function show(Request $request, Recipe $recipe): View
     {
-        $recipe->load(['ingredients', 'steps', 'tags', 'latestRevision']);
+        $recipe->load(['ingredients.food', 'steps', 'tags', 'latestRevision']);
 
         return view('recipes.show', [
             'recipe' => $recipe,
+            'nutrition' => $recipe->nutrition(),
             'isFavorite' => $request->user()->hasFavorited($recipe),
             'lastEaten' => LastEaten::forRecipe($recipe->id),
         ]);

@@ -1,6 +1,6 @@
 # TODO – Ausbau zum Fitness- & Ernährungs-Wochenplaner
 
-Stand: 08.11.2026. Reihenfolge = geplante Umsetzung. Jeder Schritt ist für sich nutzbar und bekommt Tests.
+Stand: 08.11.2026 (zuletzt ergänzt: Wünsche zu Planer, Tagesbudget, Trainingsplan). Reihenfolge = geplante Umsetzung. Jeder Schritt ist für sich nutzbar und bekommt Tests.
 Grundsatz: **Jedes Familienmitglied hat einen eigenen Plan und eigene Ziele** (neue Tabellen mit `user_id`).
 Alle Berechnungen sind Orientierungswerte und zeigen ihren Rechenweg.
 
@@ -14,34 +14,58 @@ Alle Berechnungen sind Orientierungswerte und zeigen ihren Rechenweg.
 - [x] **Server-Autostart (Skript):** `scripts/windows/Install-Server.ps1` – Apache/MariaDB als Dienste, PHP im PATH,
       Firewall. ⚠️ Muss einmal als Administrator ausgeführt werden; danach `php artisan migrate` + `exercises:import`.
 
+- [x] **Nährwertbasis Teil 1 – Lebensmittel:** BLS 4.0 (MRI, frei nutzbar) → `database/data/foods/bls_4_0.csv`
+      (7.140 Lebensmittel, je 100 g: kcal, Eiweiß, Fett, KH, Ballaststoffe, Zucker, ges. Fettsäuren, Salz) per
+      `scripts/bls/convert.py`; Tabelle `foods`, `php artisan foods:import`, Wertobjekt `Nutrients`
+      (fehlende Werte → „geschätzt“), Seite „Lebensmittel & Nährwerte“ mit Suche und Gruppenfilter.
+- [x] **Nährwertbasis Teil 2 – Rezepte berechnen:** Zutat ↔ Lebensmittel (`ingredients.food_id`, eigenes Gewicht
+      `grams`), Gewichtsschätzung für EL/TL/Stück/Größen (`IngredientWeight`, Annahmen in `config/nutrition.php`),
+      Vorschläge mit Synonymliste (`FoodMatcher`), `RecipeNutrition` (gesamt/pro Portion, „geschätzt“, unvollständig),
+      Nährwerte pro Portion auf der Rezeptseite, Zuordnungsassistent `/rezepte/{rezept}/naehrwerte` mit
+      Lebensmittelsuche, Übersicht „Nährwerte prüfen“ (`/naehrwerte`). Zuordnungen bleiben beim Bearbeiten erhalten.
+
 ## Grundversion (Dashboard, Wochenplaner, Rezeptdatenbank, Nährwertberechnung)
 
-- [ ] **Nährwertbasis**
-  - [ ] Nährwertquelle festlegen (Favorit: Bundeslebensmittelschlüssel BLS, lokal importiert; Lizenz/Verfügbarkeit prüfen)
-  - [ ] Tabelle `foods` (kcal, Protein, Kohlenhydrate, Fett, Ballaststoffe pro 100 g, Kategorie, vegetarisch/vegan) + Import-Befehl
-  - [ ] Standardgewichte für Einheiten (Stück, EL, TL, Prise …) je Lebensmittel bzw. allgemein
-  - [ ] Zutaten: `food_id` + Menge in Gramm; `NutritionCalculator` in `app/Support` (pro Rezept/Portion)
-  - [ ] Kennzeichnung „geschätzt“, wenn Zuordnung oder Umrechnung unsicher ist
-- [ ] **Bestehende Rezepte zuordnen:** Assistent schlägt pro Zutat ein Lebensmittel vor, Nutzer bestätigt
+- [ ] **Vorhandene Rezepte zuordnen** (Nutzer, über „Nährwerte prüfen“ – Vorschläge sind vorausgefüllt)
 - [ ] **Rezeptdatenbank ausbauen**
-  - [ ] Nährwerte pro Portion anzeigen (kcal, Protein, KH, Fett, Ballaststoffe), manuell überschreibbar
+  - [ ] Nährwerte auch auf Rezeptkarten/in der Übersicht; Handangaben `calories`/`protein` später entfernen oder
+        nur noch als Fallback nutzen
+  - [ ] vegetarisch/vegan je Lebensmittel (aus Gruppe ableiten, Gerichte prüfen) → Filter
+  - [ ] Synonymliste nach echten Zuordnungen erweitern (häufige Korrekturen im Assistenten übernehmen)
   - [ ] Filter: High Protein, Low Carb, Schnell (berechnet), Vegetarisch/Vegan (aus Zutaten), Meal Prep geeignet (Feld)
   - [ ] Portionen umrechnen auf der Rezeptseite (`Quantity` vorhanden)
-- [ ] **Profil & Ziele (pro Person)**
+- [ ] **Profil & Ziele (pro Person)** – vorerst nur Erwachsene; jeder sieht nur sein eigenes Profil (Entscheidung 08.11.2026)
   - [ ] Gewicht, Größe, Alter, Geschlecht, Aktivitätslevel, Trainingshäufigkeit/-art, Ziel (Aufbau/Abbau/Halten)
   - [ ] Grundumsatz (Mifflin-St Jeor) → Gesamtbedarf (PAL) → Zielkalorien und Makros, Rechenweg sichtbar
+  - [ ] **Tagesbudget für Kalorien** (Wunsch des Nutzers): berechnet aus dem Profil oder selbst festgelegt, dazu
+        Makro-Ziele; Grundlage für Planer und Dashboard
   - [ ] Getrennte Zielwerte für Trainings- und Ruhetage
 - [ ] **Persönlicher Wochenplaner**
-  - [ ] Tabelle mit `user_id`, Datum, Mahlzeit (Frühstück/Mittag/Abend/Snack), Rezept, Portionen; mehrere Einträge je Mahlzeit
-  - [ ] Tages- und Wochensummen (kcal, Makros) automatisch
+  - [ ] **Mehrere Mahlzeiten an einem Tag** (Wunsch des Nutzers): Frühstück, Mittag, Abend, Snacks – je Mahlzeit
+        auch mehrere Rezepte oder Lebensmittel
+  - [ ] Tabelle mit `user_id`, Datum, Mahlzeit, Rezept, Portionen
+  - [ ] **Nährwerte beim Planen mitberechnen** (Wunsch des Nutzers): pro Eintrag, Mahlzeit, Tag und Woche
+        (kcal, Makros) direkt beim Einplanen sichtbar, auf Basis von `RecipeNutrition` und Portionen
+  - [ ] Abgleich mit dem Tagesbudget: verbleibende kcal/Makros je Tag, Warnung bei deutlicher Überschreitung
   - [ ] Drag & Drop am Desktop, Antippen-zum-Einplanen am iPhone/iPad; Mahlzeiten tauschen/kopieren
   - [ ] Verhältnis zum bisherigen Familien-Essensplan klären (übernehmen, verknüpfen oder ablösen)
 - [ ] **Dashboard:** Tagesziele mit Fortschrittsringen, verbleibende kcal/Makros, heutige Mahlzeiten, Wochenübersicht
 
 ## Danach
 
+- [ ] **Übungskatalog ausbauen** (Wunsch des Nutzers)
+  - [ ] **Grafik der beanspruchten Muskelgruppen:** eigene SVG-Körperansicht (vorne/hinten), Bereiche den
+        Muskelgruppen zugeordnet; Hauptmuskulatur kräftig, Nebenmuskulatur hell eingefärbt. Auf der Übungsseite,
+        später auch als Belastungsübersicht für eine Trainingseinheit/Woche. Zuordnung der 23 importierten
+        Muskelgruppen (auch Sammelbegriffe wie „Beine“, „Rücken“) zu Körperbereichen festlegen.
+  - [ ] **Grafik zur Ausführung jeder Übung:** Start- und Endposition (bzw. Bewegungsablauf) je Übung.
+        Weg noch offen: eigene SVG-Illustrationen, hochgeladene Bilder/GIFs je Übung (in der DB wie Rezeptfotos)
+        oder beides; optional Link zu einem Video.
 - [ ] **Training**
-  - [ ] Trainingseinheiten pro Person planen/eintragen (aus dem Übungskatalog, Sätze/Wdh./Gewicht bzw. Dauer)
+  - [ ] **Trainingsplan erstellen** (Wunsch des Nutzers): Wochenplan pro Person mit Trainingstagen und Einheiten
+        aus dem Übungskatalog (Reihenfolge, Sätze × Wiederholungen bzw. Dauer, Pausen); Vorlagen z. B.
+        Ganzkörper 3×/Woche, nur mit vorhandenen Geräten
+  - [ ] Trainingseinheiten eintragen/abhaken (tatsächliche Sätze, Wdh., Gewicht bzw. Dauer)
   - [ ] Trainingstag ↔ Ruhetag steuert die Tagesziele; anstehende Einheiten auf dem Dashboard
   - [ ] Empfehlungen vor/nach dem Training
   - [ ] Übungen im Browser anlegen/bearbeiten (heute nur per Import)

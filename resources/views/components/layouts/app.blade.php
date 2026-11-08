@@ -90,6 +90,10 @@
                         </div>
 
                         <div class="py-1">
+                            <a href="{{ route('foods.index') }}" class="block px-4 py-2 hover:bg-paper">Lebensmittel &amp; Nährwerte</a>
+                            @can('create', App\Models\Recipe::class)
+                                <a href="{{ route('nutrition.overview') }}" class="block px-4 py-2 hover:bg-paper">Nährwerte prüfen</a>
+                            @endcan
                             <a href="{{ route('account.edit') }}" class="block px-4 py-2 hover:bg-paper">Mein Konto</a>
                             @can('viewAny', App\Models\User::class)
                                 <a href="{{ route('users.index') }}" class="block px-4 py-2 hover:bg-paper">Benutzer verwalten</a>

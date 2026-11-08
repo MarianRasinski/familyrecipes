@@ -29,6 +29,7 @@ php artisan key:generate
 php artisan migrate --seed       # Tabellen, Standard-Admin und 3 Beispielrezepte
 php artisan recipes:import       # übrige Rezepte aus database/data/recipes.json
 php artisan exercises:import     # Übungskatalog (läuft auch bei migrate --seed mit)
+php artisan foods:import         # Lebensmittel/Nährwerte aus dem BLS (läuft auch bei migrate --seed mit)
 php artisan storage:link         # für die Vorschau importierter Fotos
 npm run build
 ```
@@ -225,22 +226,59 @@ Unter „Übungen“ (für alle Familienmitglieder lesbar) steht der Übungskata
 - Code: `app/Actions/ImportExercises.php`, `app/Support/Training/ExerciseTarget.php`,
   `app/Http/Controllers/ExerciseController.php`.
 
+## Lebensmittel & Nährwerte
+
+„Lebensmittel & Nährwerte“ (Benutzermenü, für alle lesbar) durchsucht 7.140 Lebensmittel aus dem
+**Bundeslebensmittelschlüssel (BLS) 4.0** des Max Rubner-Instituts mit Werten je 100 g: Energie, Eiweiß,
+Kohlenhydrate, Fett, Ballaststoffe (zusätzlich gespeichert: Zucker, gesättigte Fettsäuren, Salz).
+
+- **Suche:** Jedes Wort muss vorkommen („zwiebel roh“). Grundlebensmittel stehen vor Gerichten, rohe zuerst.
+- **Fehlende Werte** („keine Daten“ im BLS) sind nicht 0: Sie werden als „unvollständige Daten“ markiert, und
+  Berechnungen damit gelten als Schätzung (`app/Support/Nutrition/Nutrients.php`).
+- **Daten aktualisieren:** Neue BLS-Version mit `python -I scripts/bls/convert.py <BLS-Excel> database/data/foods/bls_4_0.csv`
+  umwandeln (braucht Python mit openpyxl), dann `php artisan foods:import`. Vorhandene Einträge werden anhand
+  des BLS-Codes aktualisiert, eigene Lebensmittel ohne BLS-Code bleiben erhalten.
+- **Quelle:** Max Rubner-Institut (2025): Bundeslebensmittelschlüssel (BLS), Version 4.0. Karlsruhe.
+  Laut Dokumentation kostenfrei und ohne Lizenzbarrieren nutzbar, auch für App- und Softwareentwicklung.
+
+## Nährwerte von Rezepten
+
+Jede Zutat kann mit einem Lebensmittel aus dem BLS verknüpft werden. Daraus berechnet die Rezeptseite die
+**Nährwerte pro Portion** (kcal, Eiweiß, Kohlenhydrate, Fett, Ballaststoffe).
+
+- **Zuordnen** (Erwachsene): „Nährwerte berechnen“ bzw. „Zuordnung prüfen“ auf der Rezeptseite öffnet den
+  Assistenten. Zu jeder Zutat steht ein **Vorschlag** bereit (Synonymliste + Suche), der erst beim Speichern
+  übernommen wird. Über „ändern“ lässt sich jedes Lebensmittel suchen.
+- **Gewicht:** g, kg, ml und l werden direkt übernommen. EL, TL, Prise, Scheibe, Stück, „klein/mittelgroß/groß“
+  usw. werden über Durchschnittsgewichte geschätzt (z. B. 1 EL Öl ≈ 10 g, 1 Ei ≈ 60 g); Spannen wie „500–600 g“
+  werden gemittelt. Wer es genauer weiß, trägt das Gewicht der ganzen Menge ein.
+- **Was nicht mitzählt:** optionale Zutaten sowie Gewürze und Kräuter ohne Menge oder ohne Zuordnung.
+  Andere Zutaten ohne Menge (z. B. „Tomaten“) gelten als fehlend, bis ein Gewicht eingetragen ist.
+- **„geschätzt“** erscheint, wenn eine Menge geschätzt wurde, ein BLS-Wert fehlt oder Zutaten noch fehlen –
+  dann steht dabei, wie viele Zutaten eingerechnet sind.
+- **Übersicht:** „Nährwerte prüfen“ (Benutzermenü, Erwachsene) listet alle Rezepte, unvollständige zuerst.
+- Beim Bearbeiten eines Rezepts bleiben Zuordnungen gleichnamiger Zutaten erhalten; ein eingetragenes Gewicht
+  nur, solange Menge und Einheit gleich bleiben.
+- Annahmen (Gewichte, Synonyme, Gewürze): `config/nutrition.php`. Code: `app/Support/Nutrition/`
+  (`IngredientWeight`, `FoodMatcher`, `IngredientNutrition`, `RecipeNutrition`).
+
 ## Aufbau
 
 | Bereich | Ort |
 | --- | --- |
-| Models | `app/Models` – `Recipe`, `Ingredient`, `Step`, `Tag`, `User`, `RecipeRevision`, `MealSuggestion`, `MealPlanEntry`, `Exercise`, `Equipment`, `MuscleGroup` |
-| Enums | `app/Enums` – `Difficulty`, `Role`, `RevisionAction`, `ExerciseLevel`, `ExerciseMeasure` |
+| Models | `app/Models` – `Recipe`, `Ingredient`, `Step`, `Tag`, `User`, `RecipeRevision`, `MealSuggestion`, `MealPlanEntry`, `Exercise`, `Equipment`, `MuscleGroup`, `Food` |
+| Enums | `app/Enums` – `Difficulty`, `Role`, `RevisionAction`, `ExerciseLevel`, `ExerciseMeasure`, `FoodCategory` |
 | Kalenderwoche | `app/Support/Week.php` (ISO-Woche, offen = diese und nächste Woche) |
 | Speichern/Löschen inkl. Protokoll | `app/Actions/SaveRecipe.php`, `app/Actions/DeleteRecipe.php` |
 | Validierung | `app/Http/Requests` |
 | Berechtigungen | `app/Policies` (`RecipePolicy`, `UserPolicy`), Gates `view-family-favorites` und `view-revision-log` in `AppServiceProvider` |
 | Controller | `app/Http/Controllers` – Rezepte, Verlauf, Favoriten, Familie, Änderungsprotokoll, Benutzer, Konto, Login |
 | Views | `resources/views`, Layouts unter `resources/views/components/layouts` |
-| Artisan-Befehle | `users:create`, `recipes:import`, `exercises:import` (`app/Console/Commands`) |
+| Artisan-Befehle | `users:create`, `recipes:import`, `exercises:import`, `foods:import` (`app/Console/Commands`) |
 | Beispielrezepte | `database/seeders/RecipeSeeder.php` |
 | Ursprüngliche Rezeptdaten | `database/data/recipes.json` |
 | Übungskatalog | `database/data/exercises/*.json` |
+| Lebensmittel (BLS 4.0) | `database/data/foods/bls_4_0.csv`, Umwandlung: `scripts/bls/convert.py` |
 
 ## Tests
 

@@ -35,3 +35,6 @@ Homestead.yaml
 *.swp
 .DS_Store
 Thumbs.db
+
+# Eigene Quelldateien (Übungs-JSON, BLS-Excel) – aufbereitete Kopien liegen unter database/data/
+/TrainJ/

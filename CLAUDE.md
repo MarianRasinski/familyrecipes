@@ -12,6 +12,8 @@ der Ausbauplan in **`TODO.md`**.
 - **Jedes Familienmitglied bekommt einen eigenen Plan mit eigenen Zielen** (Entscheidung 08.11.2026).
   Neue Tabellen für Planung/Ziele/Training daher mit `user_id`; der bisherige Familien-Essensplan
   (ein Gericht pro Tag) bleibt bis zur Ablösung bestehen.
+- **Profile/Kalorienbudgets vorerst nur für Erwachsene** (Kinder: Plan ohne Kalorienziel; Erwachsenen-Formeln passen
+  nicht). **Jeder sieht nur sein eigenes Profil und Budget** – auch der Admin nicht die der anderen (Entscheidung 08.11.2026).
 - Datenbank des Forks: **lokale MariaDB (XAMPP) auf `127.0.0.1`** (eigene Instanz, getrennt von der Familien-DB
   des Originals auf 192.168.178.38 – diese nie verwenden).
 - Der Abschnitt „Arbeitsweise“ (Accounts, Geräte) stammt aus dem Original und ist für diesen Fork noch
@@ -63,12 +65,13 @@ npm run build               # nach jeder Änderung an Views/CSS/JS nötig (kein 
 php artisan view:clear
 php artisan users:create    # Account per Konsole; recipes:import = alte recipes.json importieren
 php artisan exercises:import # Übungskatalog aus database/data/exercises/*.json (wiederholbar)
+php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_0.csv (wiederholbar, Upsert per BLS-Code)
 ```
 
 ## Aufbau
 
 - `app/Actions/` – schreibende Abläufe: `SaveRecipe` (inkl. Änderungsprotokoll), `DeleteRecipe`,
-  `SaveMealPlan`, `ImportRecipeFromUrl`, `ImportExercises`.
+  `SaveMealPlan`, `ImportRecipeFromUrl`, `ImportExercises`, `ImportFoods`, `SaveIngredientNutrition`.
 - `app/Support/` – Domänenlogik: `Week` (ISO-Woche, Route-Binding `{week}` = `2026-W43`),
   `WishList` (Wunsch offen bis im Plan; „erfüllt“ wird berechnet), `ShoppingList`/`ShoppingListItem`/
   `Quantity` (Mengen addieren), `CookingSteps` (Zutaten/Timer je Schritt), `LastEaten`,
@@ -78,6 +81,16 @@ php artisan exercises:import # Übungskatalog aus database/data/exercises/*.json
   `EquipmentExercise.is_optional`) und `MuscleGroup` (Pivot `ExerciseMuscleGroup.is_primary`).
   Enums `ExerciseLevel`, `ExerciseMeasure`. Import-Schlüssel `source` (Dateiname) + `external_id`.
   Quelldatei des Nutzers: `TrainJ/Unbenannt.txt` → Kopie unter `database/data/exercises/ganzkoerper.json`.
+- Nährwerte: `Food` (Tabelle `foods`, Werte je 100 g, **null = keine Daten ≠ 0**, `category` = `FoodCategory` aus dem
+  ersten Buchstaben des BLS-Codes), `Support/Nutrition/Nutrients` (kcal/Eiweiß/Fett/KH/Ballaststoffe, `estimated`-Flag
+  bleibt beim Addieren erhalten). BLS-Originaldateien des Nutzers: `TrainJ/BLS_4_0_2025_DE/` (nicht im Git);
+  daraus erzeugt `scripts/bls/convert.py` die CSV. Quellenangabe „Max Rubner-Institut (2025): BLS 4.0“ anzeigen.
+- Rezept-Nährwerte: `ingredients.food_id` + `ingredients.grams` (eigenes Gewicht der ganzen Menge, sonst Schätzung).
+  `IngredientWeight` (Menge+Einheit → Gramm, `WeightEstimate`), `FoodMatcher` (Vorschlag: Synonyme → Suche; Gewürze nur
+  Synonyme), `IngredientNutrition` (Status counted/optional/negligible/no_food/no_weight), `RecipeNutrition`
+  (`$recipe->nutrition()`, braucht `ingredients.food` geladen). Alle Annahmen in `config/nutrition.php`.
+  `SaveRecipe` übernimmt Zuordnungen gleichnamiger Zutaten. Zuordnungen stehen nicht im Änderungsprotokoll.
+  Handangaben `recipes.calories/protein` werden nur angezeigt, solange nichts berechnet ist.
 - Rechte: `App\Enums\Role` (admin/adult/child), Policies `RecipePolicy`, `UserPolicy`,
   `MealSuggestionPolicy`, Gates in `AppServiceProvider` (`make-wishes`, `plan-meals`, `view-shopping-list`,
   `view-family-favorites`, `view-revision-log`). Admin-Account = reine Verwaltung: wünscht nicht,
@@ -100,6 +113,9 @@ php artisan exercises:import # Übungskatalog aus database/data/exercises/*.json
 - Route `rezepte/importieren` muss vor `Route::resource('rezepte')` stehen.
 - Slugs mit `language: 'de'`: „Gesäß“ → `gesaess` (in Tests beachten).
 - Pivot-Flags (`is_optional`, `is_primary`) nur über die Pivot-Klassen lesen, sonst kommt `1` statt `true`.
+- Laravel hält „food“ für unzählbar → `Food::$table = 'foods'` ist nötig.
+- Zuordnungsassistent nutzt Inline-Alpine (`x-data` im Blade, kein neues JS-Modul) → kein Build nötig.
+- `DatabaseSeeder` importiert alle 7.140 Lebensmittel (Tests mit Seeder dauern dadurch ~1 s länger).
 - Bash-Heredocs mit Backslashes (PHP-Namespaces) werden zerschossen → Edit/Write-Tool oder
   Python-Skript als Datei im Scratchpad nutzen.
 - Keine GD: Fotos werden im Browser verkleinert (`recipe-appearance.js`), Server-Limit 12 MB.

@@ -44,15 +44,26 @@ class SaveRecipe
                 $recipe->storeImage(Storage::disk('public')->get($imported), Storage::disk('public')->mimeType($imported));
             }
 
+            // Nährwert-Zuordnungen (Lebensmittel, Gewicht) gleichnamiger Zutaten übernehmen.
+            // Ein eingetragenes Gewicht gilt nur, solange Menge und Einheit gleich bleiben.
+            $previous = $recipe->ingredients()->get()->keyBy(fn ($ingredient) => mb_strtolower(trim($ingredient->name)));
+
             $recipe->ingredients()->delete();
             $recipe->ingredients()->createMany(
-                collect($data['ingredients'])->values()->map(fn (array $row, int $i) => [
-                    'position' => $i + 1,
-                    'amount' => $row['amount'] ?? null,
-                    'unit' => $row['unit'] ?? null,
-                    'name' => $row['name'],
-                    'is_optional' => $row['is_optional'] ?? false,
-                ])->all()
+                collect($data['ingredients'])->values()->map(function (array $row, int $i) use ($previous) {
+                    $old = $previous->get(mb_strtolower(trim($row['name'])));
+                    $sameAmount = $old && $old->amount === ($row['amount'] ?? null) && $old->unit === ($row['unit'] ?? null);
+
+                    return [
+                        'position' => $i + 1,
+                        'amount' => $row['amount'] ?? null,
+                        'unit' => $row['unit'] ?? null,
+                        'name' => $row['name'],
+                        'is_optional' => $row['is_optional'] ?? false,
+                        'food_id' => $old?->food_id,
+                        'grams' => $sameAmount ? $old->grams : null,
+                    ];
+                })->all()
             );
 
             $recipe->steps()->delete();

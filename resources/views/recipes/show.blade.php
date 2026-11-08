@@ -108,8 +108,9 @@
                 'Vorbereitung' => $recipe->prep_minutes ? "{$recipe->prep_minutes} Min." : null,
                 'Kochen/Backen' => $recipe->cook_minutes ? "{$recipe->cook_minutes} Min." : null,
                 'Schwierigkeit' => $recipe->difficulty?->label(),
-                'Kalorien' => $recipe->calories ? "{$recipe->calories} kcal" : null,
-                'Protein' => $recipe->protein ? "{$recipe->protein} g" : null,
+                // Handangaben nur zeigen, solange nichts aus den Zutaten berechnet ist
+                'Kalorien' => $recipe->calories && ! $nutrition->hasData() ? "{$recipe->calories} kcal" : null,
+                'Protein' => $recipe->protein && ! $nutrition->hasData() ? "{$recipe->protein} g" : null,
             ]);
         @endphp
 
@@ -123,6 +124,8 @@
                 @endforeach
             </dl>
         @endif
+
+        @include('recipes.partials.nutrition-summary')
 
         <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
             {{-- Zutaten --}}

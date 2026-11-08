@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Difficulty;
 use App\Enums\RevisionAction;
+use App\Support\Nutrition\RecipeNutrition;
 use Database\Factories\RecipeFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -77,6 +78,14 @@ class Recipe extends Model
     public function ingredients(): HasMany
     {
         return $this->hasMany(Ingredient::class)->orderBy('position');
+    }
+
+    /**
+     * Nährwerte aus den Zutaten. Erwartet geladene Beziehung `ingredients.food`.
+     */
+    public function nutrition(): RecipeNutrition
+    {
+        return RecipeNutrition::for($this);
     }
 
     public function steps(): HasMany

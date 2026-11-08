@@ -14,19 +14,28 @@ class Ingredient extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['position', 'amount', 'unit', 'name', 'is_optional'];
+    protected $fillable = ['position', 'amount', 'unit', 'name', 'is_optional', 'food_id', 'grams'];
 
     protected function casts(): array
     {
         return [
             'position' => 'integer',
             'is_optional' => 'boolean',
+            'grams' => 'float',
         ];
     }
 
     public function recipe(): BelongsTo
     {
         return $this->belongsTo(Recipe::class);
+    }
+
+    /**
+     * Lebensmittel für die Nährwertberechnung (über den Zuordnungsassistenten gesetzt).
+     */
+    public function food(): BelongsTo
+    {
+        return $this->belongsTo(Food::class);
     }
 
     /**
