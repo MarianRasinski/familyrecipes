@@ -69,9 +69,12 @@ Alle Berechnungen sind Orientierungswerte und zeigen ihren Rechenweg.
         Weg noch offen: eigene SVG-Illustrationen, hochgeladene Bilder/GIFs je Übung (in der DB wie Rezeptfotos)
         oder beides; optional Link zu einem Video.
 - [ ] **Training**
-  - [ ] **Trainingsplan erstellen** (Wunsch des Nutzers): Wochenplan pro Person mit Trainingstagen und Einheiten
-        aus dem Übungskatalog (Reihenfolge, Sätze × Wiederholungen bzw. Dauer, Pausen); Vorlagen z. B.
-        Ganzkörper 3×/Woche, nur mit vorhandenen Geräten
+  - [x] **Trainingsplan erstellen** (Wunsch des Nutzers): Einheiten mit Übungen aus dem Katalog (Reihenfolge, Sätze,
+        Ziel, Pause, Notiz), Vorlage „Ganzkörper“ nach Stufe mit vorhandenen Geräten, Wochenplan je Wochentag,
+        geplante Tage sind in „Mein Plan“ automatisch Trainingstage (Abweichung pro Tag möglich), „Heute trainieren“
+        auf der Startseite
+  - [ ] Trainingstage-Anzahl im Profil automatisch aus dem Wochenplan übernehmen (heute nur Hinweis bei Abweichung)
+  - [ ] Weitere Vorlagen (Ober-/Unterkörper, Push/Pull), Einheit kopieren
   - [ ] Trainingseinheiten eintragen/abhaken (tatsächliche Sätze, Wdh., Gewicht bzw. Dauer)
   - [ ] Trainingstag ↔ Ruhetag steuert die Tagesziele; anstehende Einheiten auf dem Dashboard
   - [ ] Empfehlungen vor/nach dem Training

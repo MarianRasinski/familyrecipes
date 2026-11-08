@@ -23,6 +23,18 @@
         <a href="{{ route('personal-plan.show') }}#tag-{{ $dayKey }}" class="text-sm font-medium text-ink-soft hover:text-ink">Mein Plan →</a>
     </div>
 
+    {{-- Heutiges Training laut Trainingsplan --}}
+    @if ($myDay->workout)
+        <a href="{{ route('workouts.edit', $myDay->workout) }}" class="mb-5 flex items-center gap-3 rounded-2xl bg-paper px-4 py-3 text-sm hover:bg-paper-deep">
+            <span class="text-2xl" aria-hidden="true">🏋️</span>
+            <span class="min-w-0 flex-1">
+                <span class="block text-xs font-semibold tracking-widest text-ink-soft uppercase">Heute trainieren</span>
+                <span class="block font-semibold">{{ $myDay->workout->name }}</span>
+            </span>
+            <span class="text-ink-soft" aria-hidden="true">→</span>
+        </a>
+    @endif
+
     {{-- Tagesziele --}}
     @if ($target)
         <div class="mb-6 flex flex-wrap items-center justify-center gap-6 sm:justify-start">

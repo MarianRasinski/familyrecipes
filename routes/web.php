@@ -21,8 +21,10 @@ use App\Http\Controllers\RecipeNutritionController;
 use App\Http\Controllers\RevisionLogController;
 use App\Http\Controllers\ShoppingListController;
 use App\Http\Controllers\ToggleFavoriteController;
+use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishController;
+use App\Http\Controllers\WorkoutController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -76,6 +78,16 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::get('einkaufsliste', ShoppingListController::class)->name('shopping-list.show');
     Route::post('einkaufsliste/immer-da', [PantryItemController::class, 'store'])->name('pantry-items.store');
     Route::delete('einkaufsliste/immer-da/{pantryItem}', [PantryItemController::class, 'destroy'])->name('pantry-items.destroy');
+
+    // Trainingsplan: eigene Einheiten und Wochenplan – nur die eigenen (WorkoutPolicy).
+    Route::get('training', [TrainingController::class, 'index'])->name('training.index');
+    Route::put('training/wochenplan', [TrainingController::class, 'updateSchedule'])->name('training.schedule');
+    Route::post('training/vorlage', [TrainingController::class, 'storeTemplate'])->name('training.template');
+    Route::post('training/einheiten', [WorkoutController::class, 'store'])->name('workouts.store');
+    Route::get('training/einheiten/{workout}', [WorkoutController::class, 'edit'])->name('workouts.edit');
+    Route::put('training/einheiten/{workout}', [WorkoutController::class, 'update'])->name('workouts.update');
+    Route::delete('training/einheiten/{workout}', [WorkoutController::class, 'destroy'])->name('workouts.destroy');
+    Route::post('training/einheiten/{workout}/uebungen', [WorkoutController::class, 'addExercise'])->name('workouts.exercises.store');
 
     // Übungskatalog (nur lesen; Import per `php artisan exercises:import`).
     Route::get('uebungen', [ExerciseController::class, 'index'])->name('exercises.index');

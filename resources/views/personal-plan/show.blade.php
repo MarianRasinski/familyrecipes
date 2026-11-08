@@ -80,6 +80,14 @@
                     @endif
                 </div>
 
+                @if ($day->workout)
+                    <a href="{{ route('workouts.edit', $day->workout) }}" class="mb-4 flex items-center gap-2 rounded-2xl bg-paper px-3 py-2 text-sm hover:bg-paper-deep">
+                        <span aria-hidden="true">🏋️</span>
+                        <span class="font-semibold">{{ $day->workout->name }}</span>
+                        <span class="ml-auto text-ink-soft" aria-hidden="true">→</span>
+                    </a>
+                @endif
+
                 {{-- Summe und Budget --}}
                 @if ($day->hasTarget())
                     @php $remaining = $day->remainingKcal(); @endphp

@@ -97,6 +97,19 @@ class User extends Authenticatable
     }
 
     /**
+     * Trainingsplan: eigene Einheiten und welche Einheit an welchem Wochentag ansteht.
+     */
+    public function workouts(): HasMany
+    {
+        return $this->hasMany(Workout::class);
+    }
+
+    public function scheduledWorkouts(): HasMany
+    {
+        return $this->hasMany(ScheduledWorkout::class);
+    }
+
+    /**
      * Initialen für Avatare, z. B. „Anna Müller“ → „AM“.
      */
     public function initials(): string

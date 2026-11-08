@@ -3,6 +3,7 @@
 namespace App\Support\Planning;
 
 use App\Models\PlannedMeal;
+use App\Models\ScheduledWorkout;
 use App\Models\TrainingDay;
 use App\Models\User;
 use App\Support\Nutrition\EnergyBudget;
@@ -42,21 +43,31 @@ final class WeekPlan
             ->get()
             ->groupBy(fn (PlannedMeal $entry) => $entry->date->toDateString());
 
-        $trainingDates = TrainingDay::query()
+        // Abweichungen vom Trainingsplan für einzelne Tage
+        $overrides = TrainingDay::query()
             ->whereBelongsTo($user)
             ->whereDate('date', '>=', $week->start)
             ->whereDate('date', '<=', $week->end())
             ->get()
-            ->map(fn (TrainingDay $day) => $day->date->toDateString());
+            ->keyBy(fn (TrainingDay $day) => $day->date->toDateString());
 
-        $days = $week->days()->map(function (CarbonImmutable $date) use ($entries, $trainingDates, $budget) {
-            $isTraining = $trainingDates->contains($date->toDateString());
+        // Wochenplan: Wochentag → Einheit
+        $schedule = ScheduledWorkout::query()
+            ->whereBelongsTo($user)
+            ->with('workout')
+            ->get()
+            ->keyBy('weekday');
+
+        $days = $week->days()->map(function (CarbonImmutable $date) use ($entries, $overrides, $schedule, $budget) {
+            $workout = $schedule->get($date->dayOfWeekIso)?->workout;
+            $isTraining = $overrides->get($date->toDateString())?->is_training ?? $workout !== null;
 
             return new DayPlan(
                 $date,
                 $entries->get($date->toDateString(), collect()),
                 $isTraining,
                 $budget ? ($isTraining ? $budget->trainingDay() : $budget->restDay()) : null,
+                $isTraining ? $workout : null,
             );
         });
 

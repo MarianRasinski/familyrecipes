@@ -39,8 +39,8 @@
                 <a href="{{ route('wishes.index') }}" @class([$navLink, $navActive => request()->routeIs('wishes.*')])>
                     Wünsche
                 </a>
-                <a href="{{ route('exercises.index') }}" @class([$navLink, $navActive => request()->routeIs('exercises.*')])>
-                    Übungen
+                <a href="{{ route('training.index') }}" @class([$navLink, $navActive => request()->routeIs('training.*', 'workouts.*', 'exercises.*')])>
+                    Training
                 </a>
                 @can('view-shopping-list')
                     <a href="{{ route('shopping-list.show') }}" @class([$navLink, $navActive => request()->routeIs('shopping-list.*')])>
@@ -84,6 +84,7 @@
                             <a href="{{ route('meal-plan.show') }}" class="block px-4 py-2 hover:bg-paper">Essensplan</a>
                             <a href="{{ route('personal-plan.show') }}" class="block px-4 py-2 hover:bg-paper">Mein Plan</a>
                             <a href="{{ route('wishes.index') }}" class="block px-4 py-2 hover:bg-paper">Wünsche</a>
+                            <a href="{{ route('training.index') }}" class="block px-4 py-2 hover:bg-paper">Training</a>
                             <a href="{{ route('exercises.index') }}" class="block px-4 py-2 hover:bg-paper">Übungen</a>
                             @can('view-shopping-list')
                                 <a href="{{ route('shopping-list.show') }}" class="block px-4 py-2 hover:bg-paper">Einkaufsliste</a>

@@ -4,6 +4,7 @@ namespace App\Support\Planning;
 
 use App\Enums\MealSlot;
 use App\Models\PlannedMeal;
+use App\Models\Workout;
 use App\Support\Nutrition\Nutrients;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
@@ -18,12 +19,14 @@ final class DayPlan
     /**
      * @param  Collection<int, PlannedMeal>  $entries
      * @param  Nutrients|null  $target  Tagesziel (null = kein Budget, z. B. Kinder oder ohne Profil)
+     * @param  Workout|null  $workout  laut Trainingsplan anstehende Einheit (nur an Trainingstagen)
      */
     public function __construct(
         public readonly CarbonImmutable $date,
         public readonly Collection $entries,
         public readonly bool $isTrainingDay,
         public readonly ?Nutrients $target,
+        public readonly ?Workout $workout = null,
     ) {}
 
     /**

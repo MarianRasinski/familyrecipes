@@ -74,7 +74,7 @@ php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_
 
 - `app/Actions/` – schreibende Abläufe: `SaveRecipe` (inkl. Änderungsprotokoll), `DeleteRecipe`,
   `SaveMealPlan`, `ImportRecipeFromUrl`, `ImportExercises`, `ImportFoods`, `SaveIngredientNutrition`, `SaveBodyProfile`,
-  `AddPlannedMeal`, `ToggleTrainingDay`.
+  `AddPlannedMeal`, `ToggleTrainingDay`, `Training/*`.
 - `app/Support/` – Domänenlogik: `Week` (ISO-Woche, Route-Binding `{week}` = `2026-W43`),
   `WishList` (Wunsch offen bis im Plan; „erfüllt“ wird berechnet), `ShoppingList`/`ShoppingListItem`/
   `Quantity` (Mengen addieren), `CookingSteps` (Zutaten/Timer je Schritt), `LastEaten`,
@@ -110,8 +110,15 @@ php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_
   Startseite „Mein Tag“ (`home/partials/my-day.blade.php`): `HomeController` übergibt `myPlan`/`myDay`/`slots`;
   Ringe über `<x-progress-ring>` (SVG, Farben per `var(--color-…)` → keine neuen Tailwind-Klassen nötig).
   Lebensmittelsuche (`foods.search`) setzt Treffer aus `nutrition.synonyms` an den Anfang („Haferflocken“ → „Hafer Flocken“).
+- Trainingsplan (`/training`): `Workout` (user_id, name, notes) → `WorkoutExercise` (exercise_id, position, sets,
+  target-Text, rest_seconds, notes), `ScheduledWorkout` (user_id + weekday 1–7 unique → workout_id). `TrainingDay`
+  = Abweichung pro Datum mit `is_training`; ohne Zeile gilt der Wochenplan (`ToggleTrainingDay` löscht die Zeile,
+  wenn sie dem Plan entspricht). `WeekPlan` setzt `DayPlan::$workout`. Actions unter `app/Actions/Training/`
+  (`SaveWorkout` mit `remove`/`move` = Submit-Knöpfe im selben Formular, `CreateWorkoutFromTemplate`,
+  `AddExerciseToWorkout`, `SaveTrainingSchedule`). `WorkoutPolicy` = nur Besitzer. Übungsauswahl nutzt `recipePicker`
+  (Daten als id/title/emoji/favorite). Standardwerte `config/training.php`.
 - Rechte: `App\Enums\Role` (admin/adult/child), Policies `RecipePolicy`, `UserPolicy`,
-  `MealSuggestionPolicy`, Gates in `AppServiceProvider` (`make-wishes`, `plan-meals`, `view-shopping-list`,
+  `MealSuggestionPolicy`, `PlannedMealPolicy`, `WorkoutPolicy`, Gates in `AppServiceProvider` (`make-wishes`, `plan-meals`, `view-shopping-list`,
   `view-family-favorites`, `view-revision-log`, `manage-body-profile`). Admin-Account = reine Verwaltung: wünscht nicht,
   fehlt in der Familien-Übersicht (Papa/Mama sind `adult`). Familien-Seite: alle Erwachsenen;
   Rezepte löschen, Benutzerverwaltung und Änderungsprotokoll: nur Admin.
