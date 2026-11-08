@@ -17,7 +17,7 @@
             @php($nutrition = $row['nutrition'])
             <article class="card-section flex flex-wrap items-center justify-between gap-3">
                 <div>
-                    <h2 class="font-semibold"><a href="{{ route('recipes.show', $recipe) }}" class="hover:text-accent">{{ $recipe->title }}</a></h2>
+                    <h2 class="font-semibold"><a href="{{ route('recipes.show', $recipe) }}" class="hover:text-accent-dark">{{ $recipe->title }}</a></h2>
                     <p class="text-xs text-ink-soft">
                         {{ $nutrition->countedCount() }} von {{ $nutrition->relevantCount() }} Zutaten berechnet
                         @if ($nutrition->hasData())
