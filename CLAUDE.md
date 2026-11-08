@@ -1,7 +1,23 @@
-# Familien-Rezeptbuch – Hinweise für Claude
+# Familien-Rezeptbuch (Fork: Fitness- & Ernährungsplaner) – Hinweise für Claude
 
 Laravel-12-App (Blade, Tailwind 4, Alpine.js) für eine Familie im Heimnetz. UI, Code-Kommentare,
-Commit-Messages und Antworten an den Nutzer: **Deutsch**. Details zu Funktionen stehen in `README.md`.
+Commit-Messages und Antworten an den Nutzer: **Deutsch**. Details zu Funktionen stehen in `README.md`,
+der Ausbauplan in **`TODO.md`**.
+
+## Dieser Fork
+
+- Fork von https://github.com/tianvay/familyrecipes, Remote: **https://github.com/MarianRasinski/familyrecipes**
+  (Branch `master`). Ziel: Ausbau zum **Fitness- und Ernährungs-Wochenplaner** (Nährwerte, Ziele,
+  Training, Meal Prep) – Schritte und Stand in `TODO.md`.
+- **Jedes Familienmitglied bekommt einen eigenen Plan mit eigenen Zielen** (Entscheidung 08.11.2026).
+  Neue Tabellen für Planung/Ziele/Training daher mit `user_id`; der bisherige Familien-Essensplan
+  (ein Gericht pro Tag) bleibt bis zur Ablösung bestehen.
+- Datenbank des Forks: **lokale MariaDB (XAMPP) auf `127.0.0.1`** (eigene Instanz, getrennt von der Familien-DB
+  des Originals auf 192.168.178.38 – diese nie verwenden).
+- Der Abschnitt „Arbeitsweise“ (Accounts, Geräte) stammt aus dem Original und ist für diesen Fork noch
+  nicht überprüft; „Umgebung“ beschreibt den Fork-PC.
+- Pflicht nach jeder Änderung: **README.md, TODO.md und CLAUDE.md aktuell halten**; Laravel-Konventionen
+  (Actions für schreibende Abläufe, Form Requests/Validator, Policies/Gates, Factories + Tests, Pint).
 
 ## Arbeitsweise mit dem Nutzer
 
@@ -9,26 +25,31 @@ Commit-Messages und Antworten an den Nutzer: **Deutsch**. Details zu Funktionen 
   Michelle, Chantal = Kinder). Nur 2 nutzen den Desktop, alle anderen **iPhone/iPad** → mobil zuerst denken.
 - **Committen/pushen nur auf ausdrückliche Bitte.** Vorher Diff auf Geheimnisse prüfen (`DB_PASSWORD`,
   `APP_KEY`, keine `storage/app`-/SQLite-Dateien). Themen in getrennte Commits. Branch: `master`,
-  Remote: https://github.com/tianvay/familyrecipes. Commit-Footer: `Co-Authored-By: Claude …`.
-- Die Datenbank ist **die echte Familien-Datenbank**. Testdaten nur auf freien Tagen/klar markiert
+  Remote: https://github.com/MarianRasinski/familyrecipes (Fork). Commit-Footer: `Co-Authored-By: Claude …`.
+- Die Datenbank (lokal, 127.0.0.1) kann echte Daten enthalten – behandeln wie die echte Familien-Datenbank. Testdaten nur auf freien Tagen/klar markiert
   („Claude-Test“), IDs merken und danach gezielt wieder löschen; echte Einträge nie anfassen.
 - System-/Sicherheitseinstellungen (Windows-Firewall, Router, Rechte auf dem DB-Server) nicht selbst
   ändern – Befehl/SQL vorbereiten, Nutzer führt aus.
 - Nach Features: Tests, Pint, `npm run build`, im Browser (built-in, `http://localhost`) prüfen,
   README ergänzen, am Ende Commit anbieten. Ideenlisten nach Umsetzbarkeit sortieren.
 
-## Umgebung
+## Umgebung (Fork-PC, Stand 08.11.2026)
 
-- Windows 11, XAMPP unter `C:\xampp`, PHP 8.2 (**ohne GD und intl**), Node 22.
-- Apache: VirtualHost **Port 80** → `public/` (`C:\xampp\apache\conf\extra\httpd-vhosts.conf`, `Listen 80`
-  in `httpd.conf`). Port 8080 = anderes Projekt *worldbuilder* (nicht anfassen). Erreichbar unter
-  `http://192.168.178.64` bzw. `http://fredrgb.fritz.box`; Firewall-Regel „Rezeptbuch (Apache, Heimnetz)“.
-- Datenbank: MariaDB auf **192.168.178.38**, DB `FamilyRecipes`, Benutzer `familyrecipes` (Passwort nur
-  in `.env`). Migrationen dort mit `php artisan migrate --force`.
-- Lokales XAMPP-MySQL nutzt nur *worldbuilder* (am 15.10.2026 repariert, Backup
-  `C:\xampp\mysql\data-backup-2026-10-15`). Dort liegen noch ungenutzte DB `rezeptbuch` + Benutzer
-  `rezeptbuch` – Löschen nur nach Rückfrage. `database/database.sqlite` = alte Kopie, ungenutzt.
-- Standard-Admin per Migration: `Admin` / `Test` (für Browser-Tests auf `http://localhost`).
+- Windows, Rechner `desktop-nl8voeq`, IP `192.168.2.101`, Heimnetz `192.168.2.0/24` (FRITZ!Box).
+  Projekt unter `C:\Users\maria\Desktop\CProjects\familyrecipes`.
+- XAMPP 8.2.12 unter `C:\xampp`: PHP 8.2 (`C:\xampp\php`, Erweiterungen: pdo_mysql, mbstring, curl,
+  fileinfo, zip, openssl …; **ohne GD und intl**), Apache 2.4, MariaDB 10.4. **Node/npm ist absichtlich nicht
+  installiert** (Entscheidung des Nutzers) → der fertige Build `public/build` wird bei jeder Design-Änderung mit ins
+  Git eingetragen; der PC holt ihn nur per `git pull`. Neue Tailwind-Klassen erst nach einem Build woanders nutzen,
+  sonst nur Klassen, die schon in `public/build/assets/*.css` stehen (vorher prüfen).
+- Apache: `Listen 80`, VirtualHost in `C:\xampp\apache\conf\extra\familyrecipes-vhost.conf` (eingebunden in
+  `httpd-vhosts.conf`, angelegt 29.10.2026) → `public/`, Zugriff nur lokal + `192.168.2.0/24`.
+- MariaDB auf `127.0.0.1:3306`, Datenbank `familyrecipes` (enthält echte Rezepte), Benutzer `familyrecipes`.
+- Autostart: `scripts/windows/Install-Server.ps1` (als Administrator) richtet die Dienste `Apache2.4` und `mysql`
+  (Automatisch, Neustart bei Absturz), PHP im System-PATH und die Firewall-Regel „Rezeptbuch (Apache, Heimnetz)“
+  ein; `-Uninstall` macht Dienste/Regel rückgängig. Ob das Skript schon gelaufen ist: `Get-Service Apache2.4, mysql`.
+- Kein Shell-Zugriff von Claude auf den PC (nur Dateien): Befehle als Skript/Anleitung vorbereiten, Nutzer führt aus.
+- Standard-Admin per Migration: `Admin` / `Test`.
 - Kein HTTPS → `navigator.share`, Clipboard-API, Wake Lock, Service Worker nicht verfügbar
   (Fallbacks sind eingebaut). Zeitzone `Europe/Berlin`.
 
@@ -38,19 +59,25 @@ Commit-Messages und Antworten an den Nutzer: **Deutsch**. Details zu Funktionen 
 php artisan test            # SQLite in-memory (phpunit.xml), echte DB bleibt unberührt
 vendor/bin/pint             # Code-Stil
 npm run build               # nach jeder Änderung an Views/CSS/JS nötig (kein Vite-Dev-Server im Betrieb);
-                            # public/build wird mitcommittet (192.168.178.38 aktualisiert nur per git pull, ohne Node)
+                            # public/build wird mitcommittet (auf dem Fork-PC ist kein Node installiert)
 php artisan view:clear
 php artisan users:create    # Account per Konsole; recipes:import = alte recipes.json importieren
+php artisan exercises:import # Übungskatalog aus database/data/exercises/*.json (wiederholbar)
 ```
 
 ## Aufbau
 
 - `app/Actions/` – schreibende Abläufe: `SaveRecipe` (inkl. Änderungsprotokoll), `DeleteRecipe`,
-  `SaveMealPlan`, `ImportRecipeFromUrl`.
+  `SaveMealPlan`, `ImportRecipeFromUrl`, `ImportExercises`.
 - `app/Support/` – Domänenlogik: `Week` (ISO-Woche, Route-Binding `{week}` = `2026-W43`),
   `WishList` (Wunsch offen bis im Plan; „erfüllt“ wird berechnet), `ShoppingList`/`ShoppingListItem`/
   `Quantity` (Mengen addieren), `CookingSteps` (Zutaten/Timer je Schritt), `LastEaten`,
-  `RecipeImport/` (`JsonLdRecipeParser`, `IngredientLineParser`, `UrlGuard` gegen Heimnetz-Abrufe).
+  `RecipeImport/` (`JsonLdRecipeParser`, `IngredientLineParser`, `UrlGuard` gegen Heimnetz-Abrufe),
+  `Training/ExerciseTarget` (Zielvorgabe „10-12 je Seite“/„30-60 Sekunden“ → Messart, Spanne, pro Seite).
+- Übungskatalog: `Exercise` ↔ `Equipment` (Gerätetyp mit `variants` + `is_available`, Pivot
+  `EquipmentExercise.is_optional`) und `MuscleGroup` (Pivot `ExerciseMuscleGroup.is_primary`).
+  Enums `ExerciseLevel`, `ExerciseMeasure`. Import-Schlüssel `source` (Dateiname) + `external_id`.
+  Quelldatei des Nutzers: `TrainJ/Unbenannt.txt` → Kopie unter `database/data/exercises/ganzkoerper.json`.
 - Rechte: `App\Enums\Role` (admin/adult/child), Policies `RecipePolicy`, `UserPolicy`,
   `MealSuggestionPolicy`, Gates in `AppServiceProvider` (`make-wishes`, `plan-meals`, `view-shopping-list`,
   `view-family-favorites`, `view-revision-log`). Admin-Account = reine Verwaltung: wünscht nicht,
@@ -71,6 +98,8 @@ php artisan users:create    # Account per Konsole; recipes:import = alte recipes
 - Blade: nach einem einzeiligen `@php(...)` keinen `@php … @endphp`-Block mehr in derselben Datei.
 - `@js(...)` kodiert Umlaute als `\u00fc` – in Tests View-Daten (`assertViewHas`) statt Text prüfen.
 - Route `rezepte/importieren` muss vor `Route::resource('rezepte')` stehen.
+- Slugs mit `language: 'de'`: „Gesäß“ → `gesaess` (in Tests beachten).
+- Pivot-Flags (`is_optional`, `is_primary`) nur über die Pivot-Klassen lesen, sonst kommt `1` statt `true`.
 - Bash-Heredocs mit Backslashes (PHP-Namespaces) werden zerschossen → Edit/Write-Tool oder
   Python-Skript als Datei im Scratchpad nutzen.
 - Keine GD: Fotos werden im Browser verkleinert (`recipe-appearance.js`), Server-Limit 12 MB.
@@ -79,7 +108,9 @@ php artisan users:create    # Account per Konsole; recipes:import = alte recipes
   DB-Speicherung, nur noch für `recipes:move-images`. Seit 19.10.2026 sind alle Fotos übernommen (beide
   Installationen) → `image_path` kann per Migration entfernt werden. MariaDB `max_allowed_packet` ≥ 32M.
 
-## Offene Ideen (nach Umsetzbarkeit)
+## Offene Ideen aus dem Original (nach Umsetzbarkeit)
+
+Der Ausbauplan des Forks steht in `TODO.md`.
 
 1. Portionen umrechnen auf der Rezeptseite (`Quantity` vorhanden)
 2. Rezeptauswahl mit Suche/Favoriten auch im Planungsformular (heute `<select>`)

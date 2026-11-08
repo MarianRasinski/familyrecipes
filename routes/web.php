@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CookingModeController;
+use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\FamilyFavoritesController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MealPlanController;
@@ -60,6 +61,10 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::get('einkaufsliste', ShoppingListController::class)->name('shopping-list.show');
     Route::post('einkaufsliste/immer-da', [PantryItemController::class, 'store'])->name('pantry-items.store');
     Route::delete('einkaufsliste/immer-da/{pantryItem}', [PantryItemController::class, 'destroy'])->name('pantry-items.destroy');
+
+    // Übungskatalog (nur lesen; Import per `php artisan exercises:import`).
+    Route::get('uebungen', [ExerciseController::class, 'index'])->name('exercises.index');
+    Route::get('uebungen/{exercise}', [ExerciseController::class, 'show'])->name('exercises.show');
 
     Route::get('konto', [AccountController::class, 'edit'])->name('account.edit');
     Route::put('konto/passwort', [AccountController::class, 'updatePassword'])->name('account.password');

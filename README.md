@@ -3,6 +3,11 @@
 Rezeptsammlung für die Familie auf Basis von Laravel 12, Blade, Tailwind CSS 4 und Alpine.js.
 Gedacht für den Betrieb im lokalen Netzwerk.
 
+> **Fork:** Dieses Repository (https://github.com/MarianRasinski/familyrecipes) baut das Rezeptbuch zu einem
+> **Fitness- und Ernährungs-Wochenplaner** aus – mit eigenem Plan und eigenen Zielen für jedes
+> Familienmitglied. Ausbauplan und Stand: [`TODO.md`](TODO.md). Die Datenbank des Forks läuft lokal
+> (`DB_HOST=127.0.0.1`), getrennt von der Familien-Datenbank des Originals.
+
 ## Einrichtung
 
 Die Daten liegen in der MariaDB auf dem Heimserver **192.168.178.38**, Datenbank **`FamilyRecipes`**.
@@ -23,6 +28,7 @@ cp .env.example .env
 php artisan key:generate
 php artisan migrate --seed       # Tabellen, Standard-Admin und 3 Beispielrezepte
 php artisan recipes:import       # übrige Rezepte aus database/data/recipes.json
+php artisan exercises:import     # Übungskatalog (läuft auch bei migrate --seed mit)
 php artisan storage:link         # für die Vorschau importierter Fotos
 npm run build
 ```
@@ -43,7 +49,20 @@ composer run dev
 
 Danach unter http://localhost:8000 erreichbar.
 
-### Betrieb über XAMPP
+### Fork: Server mit Autostart einrichten (Windows/XAMPP)
+
+Einmalig PowerShell mit Rechtsklick → **„Als Administrator ausführen“** öffnen und im Projektordner starten:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\windows\Install-Server.ps1
+```
+
+Das Skript nimmt `C:\xampp\php` in den PATH auf (danach geht `php artisan …` in jeder **neuen** Konsole),
+prüft die Apache-Konfiguration, installiert Apache und MariaDB als Windows-Dienste `Apache2.4` und `mysql`
+mit automatischem Start und Neustart bei Absturz und gibt Port 80 in der Firewall fürs Heimnetz frei.
+Es kann mehrfach laufen; `-Uninstall` entfernt Dienste und Firewall-Regel wieder.
+
+### Betrieb über XAMPP (Original)
 
 Apache liefert das Rezeptbuch über einen eigenen VirtualHost auf **Port 80** aus
 (`C:\xampp\apache\conf\extra\httpd-vhosts.conf`, dazu `Listen 80` in `httpd.conf`).
@@ -185,21 +204,43 @@ per `http://` erscheint stattdessen ein eigenes Menü: Text kopieren, per WhatsA
 Textdatei speichern. Abgehakte Zutaten (z. B. schon im Haus) werden beim Teilen weggelassen.
 Frontend: `resources/js/shopping-list.js`.
 
+## Übungen
+
+Unter „Übungen“ (für alle Familienmitglieder lesbar) steht der Übungskatalog mit Vorgabe
+(z. B. „3 × 10-12 je Seite“), Schwierigkeit, Geräten und Haupt-/Nebenmuskulatur.
+
+- **Filter:** Suche, Muskelgruppe, Gerät, Stufe (Anfänger/Mittel/Fortgeschritten) und
+  „Nur mit vorhandenen Geräten“ (optionale Geräte zählen dabei nicht).
+- **Import:** `php artisan exercises:import` liest alle JSON-Dateien aus `database/data/exercises/`
+  (oder eine einzelne Datei: `php artisan exercises:import pfad/zur/datei.json`). Ein erneuter Import
+  aktualisiert die Übungen derselben Datei anhand ihrer `id`, statt sie doppelt anzulegen.
+- **Dateiformat** (wie `database/data/exercises/ganzkoerper.json`): `kategorie`, `trainingsgeraete`
+  (Gerätebestand), `uebungen` mit `id`, `name`, `geraet`, `muskelgruppen_haupt`, `muskelgruppen_neben`,
+  `schwierigkeit`, `saetze`, `wiederholungen`, `beschreibung`.
+- **Geräte** werden zu Gerätetypen zusammengefasst: „Kettlebell 12 kg“ und „Kettlebell 16 kg“ im Bestand
+  ergeben den Typ „Kettlebell“ mit den Ausführungen 12 kg und 16 kg. „Kettlebell optional“ bei einer Übung
+  heißt: geht auch ohne. Geräte, die nur bei Übungen vorkommen, gelten als nicht vorhanden.
+- **Vorgaben** werden zusätzlich als Zahlen gespeichert (Wiederholungen bzw. Sekunden, „je Seite“),
+  damit spätere Trainingsprotokolle darauf aufbauen können; der Originaltext bleibt erhalten.
+- Code: `app/Actions/ImportExercises.php`, `app/Support/Training/ExerciseTarget.php`,
+  `app/Http/Controllers/ExerciseController.php`.
+
 ## Aufbau
 
 | Bereich | Ort |
 | --- | --- |
-| Models | `app/Models` – `Recipe`, `Ingredient`, `Step`, `Tag`, `User`, `RecipeRevision`, `MealSuggestion`, `MealPlanEntry` |
-| Enums | `app/Enums` – `Difficulty`, `Role`, `RevisionAction` |
+| Models | `app/Models` – `Recipe`, `Ingredient`, `Step`, `Tag`, `User`, `RecipeRevision`, `MealSuggestion`, `MealPlanEntry`, `Exercise`, `Equipment`, `MuscleGroup` |
+| Enums | `app/Enums` – `Difficulty`, `Role`, `RevisionAction`, `ExerciseLevel`, `ExerciseMeasure` |
 | Kalenderwoche | `app/Support/Week.php` (ISO-Woche, offen = diese und nächste Woche) |
 | Speichern/Löschen inkl. Protokoll | `app/Actions/SaveRecipe.php`, `app/Actions/DeleteRecipe.php` |
 | Validierung | `app/Http/Requests` |
 | Berechtigungen | `app/Policies` (`RecipePolicy`, `UserPolicy`), Gates `view-family-favorites` und `view-revision-log` in `AppServiceProvider` |
 | Controller | `app/Http/Controllers` – Rezepte, Verlauf, Favoriten, Familie, Änderungsprotokoll, Benutzer, Konto, Login |
 | Views | `resources/views`, Layouts unter `resources/views/components/layouts` |
-| Artisan-Befehle | `users:create`, `recipes:import` (`app/Console/Commands`) |
+| Artisan-Befehle | `users:create`, `recipes:import`, `exercises:import` (`app/Console/Commands`) |
 | Beispielrezepte | `database/seeders/RecipeSeeder.php` |
 | Ursprüngliche Rezeptdaten | `database/data/recipes.json` |
+| Übungskatalog | `database/data/exercises/*.json` |
 
 ## Tests
 

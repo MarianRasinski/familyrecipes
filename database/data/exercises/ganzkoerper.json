@@ -1,0 +1,394 @@
+{
+  "kategorie": "Ganzkörpertraining",
+  "version": "1.0",
+  "trainingsgeraete": [
+    "Yogamatte",
+    "Kettlebell 12 kg",
+    "Kettlebell 16 kg",
+    "Verstellbare Kurzhanteln",
+    "Liegestützgriffe",
+    "Rudermaschine"
+  ],
+  "uebungen": [
+    {
+      "id": 1,
+      "name": "Goblet Squat",
+      "geraet": [
+        "Kettlebell"
+      ],
+      "muskelgruppen_haupt": [
+        "Quadrizeps",
+        "Gesäß"
+      ],
+      "muskelgruppen_neben": [
+        "Bauch",
+        "Rücken"
+      ],
+      "schwierigkeit": "Anfänger",
+      "saetze": 3,
+      "wiederholungen": "10-15",
+      "beschreibung": "Kettlebell vor der Brust halten, kontrolliert in die Kniebeuge gehen und wieder aufrichten."
+    },
+    {
+      "id": 2,
+      "name": "Kettlebell Swing",
+      "geraet": [
+        "Kettlebell"
+      ],
+      "muskelgruppen_haupt": [
+        "Gesäß",
+        "Beinbeuger"
+      ],
+      "muskelgruppen_neben": [
+        "Rückenstrecker",
+        "Bauch",
+        "Schultern"
+      ],
+      "schwierigkeit": "Fortgeschritten",
+      "saetze": 3,
+      "wiederholungen": "12-15",
+      "beschreibung": "Kettlebell mit einer Hüftstreckung dynamisch nach vorne schwingen. Die Kraft kommt aus der Hüfte, nicht aus den Armen."
+    },
+    {
+      "id": 3,
+      "name": "Kettlebell Deadlift",
+      "geraet": [
+        "Kettlebell"
+      ],
+      "muskelgruppen_haupt": [
+        "Gesäß",
+        "Beinbeuger"
+      ],
+      "muskelgruppen_neben": [
+        "Rückenstrecker",
+        "Bauch",
+        "Unterarme"
+      ],
+      "schwierigkeit": "Anfänger",
+      "saetze": 3,
+      "wiederholungen": "10-12",
+      "beschreibung": "Kettlebell zwischen den Füßen aufnehmen und durch Hüftstreckung aufrichten."
+    },
+    {
+      "id": 4,
+      "name": "Kettlebell Reverse Lunge",
+      "geraet": [
+        "Kettlebell"
+      ],
+      "muskelgruppen_haupt": [
+        "Quadrizeps",
+        "Gesäß"
+      ],
+      "muskelgruppen_neben": [
+        "Beinbeuger",
+        "Bauch"
+      ],
+      "schwierigkeit": "Mittel",
+      "saetze": 3,
+      "wiederholungen": "10 je Bein",
+      "beschreibung": "Mit einer Kettlebell vor der Brust einen Schritt nach hinten machen und kontrolliert absenken."
+    },
+    {
+      "id": 5,
+      "name": "Kettlebell Clean and Press",
+      "geraet": [
+        "Kettlebell"
+      ],
+      "muskelgruppen_haupt": [
+        "Schultern",
+        "Trizeps"
+      ],
+      "muskelgruppen_neben": [
+        "Gesäß",
+        "Bauch",
+        "Rücken",
+        "Beine"
+      ],
+      "schwierigkeit": "Fortgeschritten",
+      "saetze": 3,
+      "wiederholungen": "8 je Seite",
+      "beschreibung": "Kettlebell kontrolliert in die Rack-Position bringen und anschließend über den Kopf drücken."
+    },
+    {
+      "id": 6,
+      "name": "Kettlebell Floor Press",
+      "geraet": [
+        "Kettlebell"
+      ],
+      "muskelgruppen_haupt": [
+        "Brust",
+        "Trizeps"
+      ],
+      "muskelgruppen_neben": [
+        "Vordere Schultern"
+      ],
+      "schwierigkeit": "Mittel",
+      "saetze": 3,
+      "wiederholungen": "10-12",
+      "beschreibung": "Auf dem Rücken liegen und Kettlebell kontrolliert nach oben drücken."
+    },
+    {
+      "id": 7,
+      "name": "Kurzhantel Bizepscurls",
+      "geraet": [
+        "Kurzhanteln"
+      ],
+      "muskelgruppen_haupt": [
+        "Bizeps"
+      ],
+      "muskelgruppen_neben": [
+        "Unterarme"
+      ],
+      "schwierigkeit": "Anfänger",
+      "saetze": 3,
+      "wiederholungen": "10-15",
+      "beschreibung": "Kurzhanteln mit kontrollierter Bewegung zum Oberkörper führen und langsam absenken."
+    },
+    {
+      "id": 8,
+      "name": "Kurzhantel Schulterdrücken",
+      "geraet": [
+        "Kurzhanteln"
+      ],
+      "muskelgruppen_haupt": [
+        "Schultern"
+      ],
+      "muskelgruppen_neben": [
+        "Trizeps",
+        "Bauch"
+      ],
+      "schwierigkeit": "Mittel",
+      "saetze": 3,
+      "wiederholungen": "10-12",
+      "beschreibung": "Kurzhanteln auf Schulterhöhe halten und kontrolliert über den Kopf drücken."
+    },
+    {
+      "id": 9,
+      "name": "Kurzhantel Rudern",
+      "geraet": [
+        "Kurzhanteln"
+      ],
+      "muskelgruppen_haupt": [
+        "Latissimus",
+        "Oberer Rücken"
+      ],
+      "muskelgruppen_neben": [
+        "Bizeps",
+        "Hintere Schultern"
+      ],
+      "schwierigkeit": "Anfänger",
+      "saetze": 3,
+      "wiederholungen": "10-12 je Seite",
+      "beschreibung": "Oberkörper nach vorne neigen und Kurzhantel kontrolliert Richtung Hüfte ziehen."
+    },
+    {
+      "id": 10,
+      "name": "Kurzhantel Romanian Deadlift",
+      "geraet": [
+        "Kurzhanteln"
+      ],
+      "muskelgruppen_haupt": [
+        "Beinbeuger",
+        "Gesäß"
+      ],
+      "muskelgruppen_neben": [
+        "Rückenstrecker",
+        "Bauch"
+      ],
+      "schwierigkeit": "Mittel",
+      "saetze": 3,
+      "wiederholungen": "10-12",
+      "beschreibung": "Mit leicht gebeugten Knien die Hüfte nach hinten schieben und Hanteln kontrolliert an den Beinen entlangführen."
+    },
+    {
+      "id": 11,
+      "name": "Kurzhantel Floor Press",
+      "geraet": [
+        "Kurzhanteln",
+        "Yogamatte"
+      ],
+      "muskelgruppen_haupt": [
+        "Brust",
+        "Trizeps"
+      ],
+      "muskelgruppen_neben": [
+        "Vordere Schultern"
+      ],
+      "schwierigkeit": "Anfänger",
+      "saetze": 3,
+      "wiederholungen": "10-12",
+      "beschreibung": "Auf dem Rücken liegen und beide Kurzhanteln vom Boden aus nach oben drücken."
+    },
+    {
+      "id": 12,
+      "name": "Kurzhantel Seitheben",
+      "geraet": [
+        "Kurzhanteln"
+      ],
+      "muskelgruppen_haupt": [
+        "Seitliche Schultern"
+      ],
+      "muskelgruppen_neben": [
+        "Oberer Trapezmuskel"
+      ],
+      "schwierigkeit": "Anfänger",
+      "saetze": 3,
+      "wiederholungen": "12-15",
+      "beschreibung": "Leichte Kurzhanteln seitlich bis ungefähr Schulterhöhe anheben."
+    },
+    {
+      "id": 13,
+      "name": "Liegestütze",
+      "geraet": [
+        "Liegestützgriffe"
+      ],
+      "muskelgruppen_haupt": [
+        "Brust",
+        "Trizeps"
+      ],
+      "muskelgruppen_neben": [
+        "Vordere Schultern",
+        "Bauch"
+      ],
+      "schwierigkeit": "Mittel",
+      "saetze": 3,
+      "wiederholungen": "8-15",
+      "beschreibung": "Körper in gerader Linie halten und Brust kontrolliert Richtung Boden absenken."
+    },
+    {
+      "id": 14,
+      "name": "Plank",
+      "geraet": [
+        "Yogamatte"
+      ],
+      "muskelgruppen_haupt": [
+        "Bauch",
+        "Tiefe Rumpfmuskulatur"
+      ],
+      "muskelgruppen_neben": [
+        "Schultern",
+        "Gesäß",
+        "Rücken"
+      ],
+      "schwierigkeit": "Anfänger",
+      "saetze": 3,
+      "wiederholungen": "30-60 Sekunden",
+      "beschreibung": "Unterarme aufstützen und den Körper stabil in einer geraden Linie halten."
+    },
+    {
+      "id": 15,
+      "name": "Russian Twist",
+      "geraet": [
+        "Yogamatte",
+        "Kettlebell optional"
+      ],
+      "muskelgruppen_haupt": [
+        "Schräge Bauchmuskeln"
+      ],
+      "muskelgruppen_neben": [
+        "Gerader Bauchmuskel"
+      ],
+      "schwierigkeit": "Mittel",
+      "saetze": 3,
+      "wiederholungen": "16-20 insgesamt",
+      "beschreibung": "Im Sitzen den Oberkörper kontrolliert von Seite zu Seite drehen."
+    },
+    {
+      "id": 16,
+      "name": "Glute Bridge",
+      "geraet": [
+        "Yogamatte"
+      ],
+      "muskelgruppen_haupt": [
+        "Gesäß"
+      ],
+      "muskelgruppen_neben": [
+        "Beinbeuger",
+        "Bauch"
+      ],
+      "schwierigkeit": "Anfänger",
+      "saetze": 3,
+      "wiederholungen": "15-20",
+      "beschreibung": "Auf dem Rücken liegen, Füße aufstellen und das Becken kontrolliert anheben."
+    },
+    {
+      "id": 17,
+      "name": "Bird Dog",
+      "geraet": [
+        "Yogamatte"
+      ],
+      "muskelgruppen_haupt": [
+        "Rückenstrecker",
+        "Tiefe Rumpfmuskulatur"
+      ],
+      "muskelgruppen_neben": [
+        "Gesäß",
+        "Schultern"
+      ],
+      "schwierigkeit": "Anfänger",
+      "saetze": 3,
+      "wiederholungen": "10 je Seite",
+      "beschreibung": "Im Vierfüßlerstand gegenüberliegenden Arm und gegenüberliegendes Bein ausstrecken."
+    },
+    {
+      "id": 18,
+      "name": "Rudermaschine Intervalltraining",
+      "geraet": [
+        "Rudermaschine"
+      ],
+      "muskelgruppen_haupt": [
+        "Beine",
+        "Rücken",
+        "Gesäß"
+      ],
+      "muskelgruppen_neben": [
+        "Bizeps",
+        "Schultern",
+        "Bauch"
+      ],
+      "schwierigkeit": "Mittel",
+      "saetze": 5,
+      "wiederholungen": "1 Minute intensiv, 1 Minute locker",
+      "beschreibung": "Abwechselnd intensive und lockere Ruderintervalle absolvieren."
+    },
+    {
+      "id": 19,
+      "name": "Rudermaschine Grundlagenausdauer",
+      "geraet": [
+        "Rudermaschine"
+      ],
+      "muskelgruppen_haupt": [
+        "Beine",
+        "Rücken",
+        "Gesäß"
+      ],
+      "muskelgruppen_neben": [
+        "Bizeps",
+        "Schultern",
+        "Bauch"
+      ],
+      "schwierigkeit": "Anfänger",
+      "saetze": 1,
+      "wiederholungen": "15-30 Minuten",
+      "beschreibung": "Gleichmäßig und in moderater Intensität rudern. Ein Tempo wählen, bei dem noch Gespräche möglich sind."
+    },
+    {
+      "id": 20,
+      "name": "Dead Bug",
+      "geraet": [
+        "Yogamatte"
+      ],
+      "muskelgruppen_haupt": [
+        "Tiefe Bauchmuskulatur"
+      ],
+      "muskelgruppen_neben": [
+        "Gerader Bauchmuskel",
+        "Hüftbeuger"
+      ],
+      "schwierigkeit": "Anfänger",
+      "saetze": 3,
+      "wiederholungen": "10 je Seite",
+      "beschreibung": "Auf dem Rücken liegen und diagonal Arm und Bein kontrolliert absenken, während der untere Rücken stabil bleibt."
+    }
+  ]
+}
