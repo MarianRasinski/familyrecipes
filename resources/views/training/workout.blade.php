@@ -15,6 +15,13 @@
             </p>
         </div>
 
+        @unless ($muscleMap->isEmpty())
+            <section class="card-section mb-6" aria-labelledby="belastung">
+                <h2 id="belastung" class="mb-4 font-display text-xl font-semibold">Beanspruchte Muskeln</h2>
+                <x-muscle-map :map="$muscleMap" :label="'Beanspruchte Muskeln in '.$workout->name" />
+            </section>
+        @endunless
+
         @if ($workout->exercises->isNotEmpty())
             <form method="POST" action="{{ route('workout-sessions.store', $workout) }}" class="mb-8">
                 @csrf

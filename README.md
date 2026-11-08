@@ -226,6 +226,18 @@ Unter „Übungen“ (für alle Familienmitglieder lesbar) steht der Übungskata
 - Code: `app/Actions/ImportExercises.php`, `app/Support/Training/ExerciseTarget.php`,
   `app/Http/Controllers/ExerciseController.php`.
 
+## Übungsbilder & Muskelkarte
+
+- **Übungsbilder:** jede Übung zeigt Strichfiguren mit Start- und Endposition (Plank: eine Position), mit
+  Kettlebell, Kurzhanteln, Liegestützgriffen, Matte oder Rudergerät. Gelenkpunkte je Übung in
+  `config/exercise_illustrations.php` (Feld 120 × 112, Boden bei y = 94) – neue Übungen dort ergänzen;
+  ohne Eintrag zeigt die Seite einfach kein Bild.
+- **Muskelkarte:** Körper von vorne und hinten, **Hauptmuskulatur kräftig grün, Nebenmuskulatur hellgrün**,
+  Tooltip mit dem Muskelnamen. Auf jeder Übungsseite und als **Belastungsübersicht** für eine ganze
+  Trainingseinheit. Zuordnung Muskelgruppe → Körperbereiche (auch Sammelbegriffe wie „Beine“, „Rücken“) in
+  `config/muscle_map.php`.
+- Beides ist reines SVG mit den Theme-Farben – kein Build nötig.
+
 ## Trainingsplan
 
 „Training“ (Navigation, `/training`) – jede Person plant ihr eigenes Training (privat, auch Kinder):

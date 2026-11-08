@@ -61,13 +61,13 @@ Alle Berechnungen sind Orientierungswerte und zeigen ihren Rechenweg.
 ## Danach
 
 - [ ] **Übungskatalog ausbauen** (Wunsch des Nutzers)
-  - [ ] **Grafik der beanspruchten Muskelgruppen:** eigene SVG-Körperansicht (vorne/hinten), Bereiche den
-        Muskelgruppen zugeordnet; Hauptmuskulatur kräftig, Nebenmuskulatur hell eingefärbt. Auf der Übungsseite,
-        später auch als Belastungsübersicht für eine Trainingseinheit/Woche. Zuordnung der 23 importierten
-        Muskelgruppen (auch Sammelbegriffe wie „Beine“, „Rücken“) zu Körperbereichen festlegen.
-  - [ ] **Grafik zur Ausführung jeder Übung:** Start- und Endposition (bzw. Bewegungsablauf) je Übung.
-        Weg noch offen: eigene SVG-Illustrationen, hochgeladene Bilder/GIFs je Übung (in der DB wie Rezeptfotos)
-        oder beides; optional Link zu einem Video.
+  - [x] **Grafik der beanspruchten Muskelgruppen:** SVG-Körper vorne/hinten (`<x-muscle-map>`), alle 23 Muskelgruppen
+        zugeordnet (`config/muscle_map.php`), auf der Übungsseite und als Belastungsübersicht je Einheit
+  - [ ] Belastungsübersicht für die ganze Woche (alle geplanten Einheiten bzw. das Protokoll)
+  - [x] **Grafik zur Ausführung jeder Übung:** Strichfiguren Start → Ende für alle 20 Übungen
+        (`<x-exercise-illustration>`, Gelenkpunkte in `config/exercise_illustrations.php`)
+  - [ ] Optional: eigene Fotos/GIFs je Übung hochladen (in der DB wie Rezeptfotos) oder Link zu einem Video;
+        Übungsbild klein auf den Karten im Katalog
 - [ ] **Training**
   - [x] **Trainingsplan erstellen** (Wunsch des Nutzers): Einheiten mit Übungen aus dem Katalog (Reihenfolge, Sätze,
         Ziel, Pause, Notiz), Vorlage „Ganzkörper“ nach Stufe mit vorhandenen Geräten, Wochenplan je Wochentag,

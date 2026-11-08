@@ -110,6 +110,11 @@ php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_
   Startseite „Mein Tag“ (`home/partials/my-day.blade.php`): `HomeController` übergibt `myPlan`/`myDay`/`slots`;
   Ringe über `<x-progress-ring>` (SVG, Farben per `var(--color-…)` → keine neuen Tailwind-Klassen nötig).
   Lebensmittelsuche (`foods.search`) setzt Treffer aus `nutrition.synonyms` an den Anfang („Haferflocken“ → „Hafer Flocken“).
+- Übungsgrafiken (reines SVG, Theme-Farben): `<x-muscle-map :map>` mit `Support/Training/MuscleMap`
+  (`forExercise()`/`forExercises()`, Bereiche aus `config/muscle_map.php`, Haupt schlägt Neben) und
+  `<x-exercise-illustration :exercise>` (Strichfiguren aus `config/exercise_illustrations.php`, Schlüssel = Slug;
+  fehlende hintere Gliedmaßen werden 2 px versetzt ergänzt, `null` = weglassen). Tests prüfen, dass jede Übung und
+  jede Muskelgruppe aus `ganzkoerper.json` abgedeckt ist → neue Übungen dort ergänzen.
 - Trainingsplan (`/training`): `Workout` (user_id, name, notes) → `WorkoutExercise` (exercise_id, position, sets,
   target-Text, rest_seconds, notes), `ScheduledWorkout` (user_id + weekday 1–7 unique → workout_id). `TrainingDay`
   = Abweichung pro Datum mit `is_training`; ohne Zeile gilt der Wochenplan (`ToggleTrainingDay` löscht die Zeile,

@@ -7,6 +7,7 @@ use App\Models\Equipment;
 use App\Models\Exercise;
 use App\Models\MuscleGroup;
 use App\Support\Training\ExerciseHistory;
+use App\Support\Training\MuscleMap;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -49,6 +50,7 @@ class ExerciseController extends Controller
             'exercise' => $exercise,
             'progress' => $progress,
             'chart' => ExerciseHistory::chart($progress),
+            'muscleMap' => MuscleMap::forExercise($exercise),
         ]);
     }
 }

@@ -21,6 +21,8 @@
             @endif
         </header>
 
+        <x-exercise-illustration :exercise="$exercise" class="card-section mb-6" />
+
         <div class="grid gap-6 sm:grid-cols-2">
             <section class="card-section">
                 <h2 class="mb-3 font-display text-xl font-semibold">Vorgabe</h2>
@@ -58,6 +60,9 @@
 
         <section class="card-section mt-6">
             <h2 class="mb-3 font-display text-xl font-semibold">Muskelgruppen</h2>
+            @unless ($muscleMap->isEmpty())
+                <x-muscle-map :map="$muscleMap" :label="'Beanspruchte Muskeln bei '.$exercise->name" class="mb-6" />
+            @endunless
             @foreach ([true => 'Hauptsächlich', false => 'Unterstützend'] as $primary => $heading)
                 @php($groups = $exercise->muscleGroups->filter(fn ($group) => $group->pivot->is_primary == $primary))
                 @if ($groups->isNotEmpty())

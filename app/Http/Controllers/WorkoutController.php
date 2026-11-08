@@ -7,6 +7,7 @@ use App\Actions\Training\SaveWorkout;
 use App\Http\Requests\UpdateWorkoutRequest;
 use App\Models\Exercise;
 use App\Models\Workout;
+use App\Support\Training\MuscleMap;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -30,10 +31,12 @@ class WorkoutController extends Controller
     {
         Gate::authorize('update', $workout);
 
-        $workout->load(['exercises.exercise', 'schedule']);
+        $workout->load(['exercises.exercise.muscleGroups', 'schedule']);
 
         return view('training.workout', [
             'workout' => $workout,
+            // Belastungsübersicht: alle Übungen der Einheit zusammen
+            'muscleMap' => MuscleMap::forExercises($workout->exercises->pluck('exercise')),
             // Für die Übungsauswahl (recipePicker erwartet id/title/emoji/favorite)
             'catalog' => Exercise::query()
                 ->with('equipment')
