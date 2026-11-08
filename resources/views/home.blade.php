@@ -88,6 +88,11 @@
         </div>
     </div>
 
+    {{-- Persönliches Dashboard --}}
+    <div class="mt-10">
+        @include('home.partials.my-day')
+    </div>
+
     {{-- Rest der Woche --}}
     <section class="mt-10" aria-labelledby="demnaechst">
         <div class="mb-4 flex items-baseline justify-between gap-4">

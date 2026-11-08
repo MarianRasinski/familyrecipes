@@ -278,6 +278,17 @@ Alltag, Ziel und Training ein **Tagesbudget** für Kalorien, Eiweiß, Kohlenhydr
 - Hinweis, wenn das Budget unter dem Grundumsatz liegt. Alle Werte: `config/nutrition.php` (`budget`),
   Code: `app/Support/Nutrition/EnergyBudget.php`, Tabelle `body_profiles`.
 
+## Startseite: Mein Tag (Dashboard)
+
+Unter „Heute gibt's“ zeigt die Startseite den eigenen Tag aus „Mein Plan“:
+
+- **Fortschrittsringe** für Kalorien, Eiweiß, Kohlenhydrate und Fett gegen das Tagesbudget (nur mit Profil),
+  dazu „Noch … kcal übrig“ bzw. „… kcal über Budget“ und ob heute Trainings- oder Ruhetag ist.
+- **Heutige Mahlzeiten** mit kcal je Mahlzeit; für leere Mahlzeiten Schnell-Links („＋ Abendessen“).
+- **Diese Woche:** sieben Balken (Anteil am Tagesbudget), 🏋️ = Trainingstag; antippen öffnet den Tag.
+- Ohne Profil: Hinweis auf „Profil & Ziele“ (Erwachsene); Kinder sehen ihre Mahlzeiten mit kcal-Summe.
+- Ringe sind SVG (`components/progress-ring.blade.php`) mit den Theme-Farben – kein neuer Build nötig.
+
 ## Mein Plan (persönlicher Wochenplaner)
 
 „Mein Plan“ (Navigation, `/mein-plan`) ist der eigene Wochenplan jeder Person – unabhängig vom

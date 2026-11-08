@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\MealSlot;
 use App\Models\MealPlanEntry;
+use App\Support\Planning\WeekPlan;
 use App\Support\Week;
 use App\Support\WishList;
 use Carbon\CarbonImmutable;
@@ -27,6 +29,9 @@ class HomeController extends Controller
 
         $openWishes = WishList::upTo()->open();
 
+        // Persönliches Dashboard „Mein Tag“ (eigener Plan, eigenes Budget)
+        $myPlan = WeekPlan::for($request->user(), Week::current());
+
         return view('home', [
             'greeting' => $this->greeting(),
             'today' => $today,
@@ -35,6 +40,9 @@ class HomeController extends Controller
             'nextWeekPlanned' => MealPlanEntry::query()->forWeek($nextWeek)->count(),
             'openWishes' => $openWishes->count(),
             'ownOpenWishes' => $openWishes->where('user_id', $request->user()->id)->count(),
+            'myPlan' => $myPlan,
+            'myDay' => $myPlan->days[$today->dayOfWeekIso],
+            'slots' => MealSlot::cases(),
         ]);
     }
 

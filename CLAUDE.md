@@ -104,6 +104,8 @@ php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_
   `nutrients()` = null wenn Rezept ohne Nährwerte), `TrainingDay` (Zeile = Trainingstag). `Support/Planning/WeekPlan::for($user, $week)`
   → `DayPlan` je Tag (Summe, Ziel aus `EnergyBudget`, `remainingKcal()`, `isOverBudget()` mit `budget.over_tolerance`).
   Routen `{day}` = `2026-11-09`; alles ohne Benutzer-Parameter, `PlannedMealPolicy` = nur Besitzer. Für alle Rollen.
+  Startseite „Mein Tag“ (`home/partials/my-day.blade.php`): `HomeController` übergibt `myPlan`/`myDay`/`slots`;
+  Ringe über `<x-progress-ring>` (SVG, Farben per `var(--color-…)` → keine neuen Tailwind-Klassen nötig).
   Lebensmittelsuche (`foods.search`) setzt Treffer aus `nutrition.synonyms` an den Anfang („Haferflocken“ → „Hafer Flocken“).
 - Rechte: `App\Enums\Role` (admin/adult/child), Policies `RecipePolicy`, `UserPolicy`,
   `MealSuggestionPolicy`, Gates in `AppServiceProvider` (`make-wishes`, `plan-meals`, `view-shopping-list`,

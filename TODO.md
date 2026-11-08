@@ -31,6 +31,8 @@ Alle Berechnungen sind Orientierungswerte und zeigen ihren Rechenweg.
       mehreren Einträgen (Rezept × Portionen oder Lebensmittel × Gramm), Nährwerte je Eintrag/Mahlzeit/Tag, Abgleich mit
       dem Tagesbudget („noch … kcal“, Warnung ab 10 % drüber), Trainingstage pro Tag markieren, Menge ändern/entfernen,
       mobil per Antippen. Lebensmittelsuche berücksichtigt Synonyme.
+- [x] **Dashboard „Mein Tag“ (Grundversion):** auf der Startseite – Fortschrittsringe (SVG) für kcal/Eiweiß/KH/Fett,
+      verbleibende kcal, Trainings-/Ruhetag, heutige Mahlzeiten mit Schnell-Links, Wochenbalken.
 
 ## Grundversion (Dashboard, Wochenplaner, Rezeptdatenbank, Nährwertberechnung)
 
@@ -51,7 +53,8 @@ Alle Berechnungen sind Orientierungswerte und zeigen ihren Rechenweg.
   - [ ] Drag & Drop am Desktop (braucht neues JS → Build auf einem Rechner mit Node, `public/build` mitcommitten)
   - [ ] Verhältnis zum Familien-Essensplan klären (Gericht des Tages als Vorschlag fürs Abendessen übernehmen?)
   - [ ] Eigene Lebensmittel/Fertigprodukte anlegen (z. B. Proteinriegel mit Herstellerangaben)
-- [ ] **Dashboard:** Tagesziele mit Fortschrittsringen, verbleibende kcal/Makros, heutige Mahlzeiten, Wochenübersicht
+- [ ] **Dashboard ausbauen** (Grundversion erledigt, siehe oben): anstehende Trainingseinheit, Gewichtsverlauf,
+      Hinweis auf Rezepte ohne Nährwerte im eigenen Plan
 
 ## Danach
 
