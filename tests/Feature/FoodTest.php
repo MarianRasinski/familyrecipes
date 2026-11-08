@@ -77,4 +77,15 @@ class FoodTest extends TestCase
     {
         $this->get(route('foods.index'))->assertSee('Bundeslebensmittelschlüssel (BLS), Version 4.0');
     }
+
+    public function test_search_puts_synonym_first(): void
+    {
+        $oats = Food::factory()->create(['bls_code' => 'C133000', 'name' => 'Hafer Flocken']);
+        Food::factory()->create(['name' => 'Haferflockenplätzchen']);
+
+        $results = $this->getJson(route('foods.search', ['q' => 'Haferflocken']))->assertOk()->json();
+
+        $this->assertSame($oats->id, $results[0]['id']);
+        $this->assertCount(2, $results);
+    }
 }

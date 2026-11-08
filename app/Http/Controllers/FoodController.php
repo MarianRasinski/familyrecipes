@@ -43,10 +43,15 @@ class FoodController extends Controller
             return response()->json([]);
         }
 
+        // Synonyme zuerst: „Haferflocken“ heißt im BLS „Hafer Flocken“ und würde sonst nicht gefunden
+        $synonym = config('nutrition.synonyms')[mb_strtolower($term)] ?? null;
+        $synonymFood = $synonym ? Food::query()->firstWhere('bls_code', $synonym) : null;
+
         $foods = Food::query()
             ->search($term)
             ->limit(12)
             ->get()
+            ->when($synonymFood, fn ($foods) => $foods->reject(fn (Food $food) => $food->is($synonymFood))->prepend($synonymFood)->take(12))
             ->map(fn (Food $food) => [
                 'id' => $food->id,
                 'name' => $food->name,
