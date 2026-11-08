@@ -27,6 +27,10 @@ Alle Berechnungen sind Orientierungswerte und zeigen ihren Rechenweg.
       Seite `/profil`; `EnergyBudget`: Mifflin-St Jeor × PAL ± Ziel = Ruhetag, + Trainingsverbrauch (MET) = Trainingstag,
       Wochenschnitt, Makros (Eiweiß je kg mit BMI-Bezugsgewicht, Fett 30 %, KH Rest, Ballaststoffe 30 g), eigenes Budget
       optional, Rechenweg und Warnung unter Grundumsatz. Werte in `config/nutrition.php` (`budget`).
+- [x] **Persönlicher Wochenplaner (Grundversion):** `/mein-plan`, je Person privat; Frühstück/Mittag/Abend/Snacks mit
+      mehreren Einträgen (Rezept × Portionen oder Lebensmittel × Gramm), Nährwerte je Eintrag/Mahlzeit/Tag, Abgleich mit
+      dem Tagesbudget („noch … kcal“, Warnung ab 10 % drüber), Trainingstage pro Tag markieren, Menge ändern/entfernen,
+      mobil per Antippen. Lebensmittelsuche berücksichtigt Synonyme.
 
 ## Grundversion (Dashboard, Wochenplaner, Rezeptdatenbank, Nährwertberechnung)
 
@@ -42,15 +46,11 @@ Alle Berechnungen sind Orientierungswerte und zeigen ihren Rechenweg.
   - [ ] Makro-Ziele selbst festlegen (heute nur das kcal-Budget; Eiweiß/Fett werden immer berechnet)
   - [ ] Gewicht mit Datum speichern statt überschreiben → Grundlage für „Fortschritt“
   - [ ] Budget auf der Startseite/im Dashboard anzeigen; konkrete Trainingstage aus dem Trainingsplan statt Anzahl
-- [ ] **Persönlicher Wochenplaner**
-  - [ ] **Mehrere Mahlzeiten an einem Tag** (Wunsch des Nutzers): Frühstück, Mittag, Abend, Snacks – je Mahlzeit
-        auch mehrere Rezepte oder Lebensmittel
-  - [ ] Tabelle mit `user_id`, Datum, Mahlzeit, Rezept, Portionen
-  - [ ] **Nährwerte beim Planen mitberechnen** (Wunsch des Nutzers): pro Eintrag, Mahlzeit, Tag und Woche
-        (kcal, Makros) direkt beim Einplanen sichtbar, auf Basis von `RecipeNutrition` und Portionen
-  - [ ] Abgleich mit dem Tagesbudget: verbleibende kcal/Makros je Tag, Warnung bei deutlicher Überschreitung
-  - [ ] Drag & Drop am Desktop, Antippen-zum-Einplanen am iPhone/iPad; Mahlzeiten tauschen/kopieren
-  - [ ] Verhältnis zum bisherigen Familien-Essensplan klären (übernehmen, verknüpfen oder ablösen)
+- [ ] **Persönlicher Wochenplaner ausbauen** (Grundversion erledigt, siehe oben)
+  - [ ] Tag/Mahlzeit kopieren („wie gestern“), Einträge zwischen Mahlzeiten verschieben
+  - [ ] Drag & Drop am Desktop (braucht neues JS → Build-Weg klären)
+  - [ ] Verhältnis zum Familien-Essensplan klären (Gericht des Tages als Vorschlag fürs Abendessen übernehmen?)
+  - [ ] Eigene Lebensmittel/Fertigprodukte anlegen (z. B. Proteinriegel mit Herstellerangaben)
 - [ ] **Dashboard:** Tagesziele mit Fortschrittsringen, verbleibende kcal/Makros, heutige Mahlzeiten, Wochenübersicht
 
 ## Danach

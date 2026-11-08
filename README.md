@@ -278,16 +278,32 @@ Alltag, Ziel und Training ein **Tagesbudget** für Kalorien, Eiweiß, Kohlenhydr
 - Hinweis, wenn das Budget unter dem Grundumsatz liegt. Alle Werte: `config/nutrition.php` (`budget`),
   Code: `app/Support/Nutrition/EnergyBudget.php`, Tabelle `body_profiles`.
 
+## Mein Plan (persönlicher Wochenplaner)
+
+„Mein Plan“ (Navigation, `/mein-plan`) ist der eigene Wochenplan jeder Person – unabhängig vom
+Familien-Essensplan, der weiter bestehen bleibt.
+
+- **Mehrere Mahlzeiten pro Tag:** Frühstück, Mittagessen, Abendessen, Snacks – je Mahlzeit beliebig viele
+  Einträge: ein **Rezept** mit Portionen (auch 0,5 oder 1,5) oder ein **Lebensmittel** aus dem BLS mit Gramm.
+- **Nährwerte beim Planen:** je Eintrag, Mahlzeit und Tag (kcal, Eiweiß, Kohlenhydrate, Fett). Rezepte ohne
+  berechnete Nährwerte werden markiert und fehlen in der Summe (Link „berechnen“ für Erwachsene).
+- **Abgleich mit dem Tagesbudget** (nur mit Profil, siehe „Profil & Ziele“): „noch … kcal“ bzw. „… kcal über
+  Budget“ mit Balken; ab 10 % über dem Budget rot. Tage lassen sich als **Trainingstag** markieren, dann gilt
+  das Trainingstag-Budget. Oben steht ein Wochenüberblick.
+- Menge eines Eintrags antippen = ändern; ✕ = entfernen. Kinder planen ohne Kalorienziel.
+- **Privat:** Jeder sieht und ändert nur seinen eigenen Plan, auch der Admin nicht den der anderen.
+- Code: `app/Support/Planning/` (`WeekPlan`, `DayPlan`), Tabellen `planned_meals`, `training_days`.
+
 ## Aufbau
 
 | Bereich | Ort |
 | --- | --- |
-| Models | `app/Models` – `Recipe`, `Ingredient`, `Step`, `Tag`, `User`, `RecipeRevision`, `MealSuggestion`, `MealPlanEntry`, `Exercise`, `Equipment`, `MuscleGroup`, `Food`, `BodyProfile` |
-| Enums | `app/Enums` – `Difficulty`, `Role`, `RevisionAction`, `ExerciseLevel`, `ExerciseMeasure`, `FoodCategory`, `Sex`, `ActivityLevel`, `FitnessGoal`, `TrainingType` |
+| Models | `app/Models` – `Recipe`, `Ingredient`, `Step`, `Tag`, `User`, `RecipeRevision`, `MealSuggestion`, `MealPlanEntry`, `Exercise`, `Equipment`, `MuscleGroup`, `Food`, `BodyProfile`, `PlannedMeal`, `TrainingDay` |
+| Enums | `app/Enums` – `Difficulty`, `Role`, `RevisionAction`, `ExerciseLevel`, `ExerciseMeasure`, `FoodCategory`, `Sex`, `ActivityLevel`, `FitnessGoal`, `TrainingType`, `MealSlot` |
 | Kalenderwoche | `app/Support/Week.php` (ISO-Woche, offen = diese und nächste Woche) |
 | Speichern/Löschen inkl. Protokoll | `app/Actions/SaveRecipe.php`, `app/Actions/DeleteRecipe.php` |
 | Validierung | `app/Http/Requests` |
-| Berechtigungen | `app/Policies` (`RecipePolicy`, `UserPolicy`), Gates `view-family-favorites`, `view-revision-log` und `manage-body-profile` in `AppServiceProvider` |
+| Berechtigungen | `app/Policies` (`RecipePolicy`, `UserPolicy`, `PlannedMealPolicy`), Gates `view-family-favorites`, `view-revision-log` und `manage-body-profile` in `AppServiceProvider` |
 | Controller | `app/Http/Controllers` – Rezepte, Verlauf, Favoriten, Familie, Änderungsprotokoll, Benutzer, Konto, Login |
 | Views | `resources/views`, Layouts unter `resources/views/components/layouts` |
 | Artisan-Befehle | `users:create`, `recipes:import`, `exercises:import`, `foods:import` (`app/Console/Commands`) |

@@ -11,6 +11,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MealPlanController;
 use App\Http\Controllers\NutritionOverviewController;
 use App\Http\Controllers\PantryItemController;
+use App\Http\Controllers\PersonalPlanController;
+use App\Http\Controllers\PlannedMealController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\RecipeHistoryController;
 use App\Http\Controllers\RecipeImageController;
@@ -55,6 +57,15 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::get('essensplan/{week?}', [MealPlanController::class, 'show'])->name('meal-plan.show');
     Route::get('essensplan/{week}/planen', [MealPlanController::class, 'edit'])->name('meal-plan.edit');
     Route::put('essensplan/{week}', [MealPlanController::class, 'update'])->name('meal-plan.update');
+
+    // Mein Plan: persönlicher Wochenplaner – jede Person nur ihr eigener ({day} = „2026-11-09“).
+    Route::pattern('day', '\d{4}-\d{2}-\d{2}');
+    Route::get('mein-plan/{week?}', [PersonalPlanController::class, 'show'])->name('personal-plan.show');
+    Route::get('mein-plan/tag/{day}/hinzufuegen', [PersonalPlanController::class, 'create'])->name('personal-plan.create');
+    Route::put('mein-plan/tag/{day}/training', [PersonalPlanController::class, 'updateTrainingDay'])->name('personal-plan.training');
+    Route::post('mein-plan/eintraege', [PersonalPlanController::class, 'store'])->name('planned-meals.store');
+    Route::patch('mein-plan/eintraege/{plannedMeal}', [PlannedMealController::class, 'update'])->name('planned-meals.update');
+    Route::delete('mein-plan/eintraege/{plannedMeal}', [PlannedMealController::class, 'destroy'])->name('planned-meals.destroy');
 
     // Wunschliste: wünschen darf jeder; Wünsche bleiben offen, bis sie im Essensplan stehen.
     Route::get('wuensche', [WishController::class, 'index'])->name('wishes.index');

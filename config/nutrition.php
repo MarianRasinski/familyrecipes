@@ -179,6 +179,9 @@ return [
 
         // Kalorienziele werden auf diese Schrittweite gerundet
         'round_to' => 10,
+
+        // Wochenplaner: ab so viel über dem Tagesbudget gibt es einen Hinweis (0.10 = 10 %)
+        'over_tolerance' => 0.10,
     ],
 
 ];

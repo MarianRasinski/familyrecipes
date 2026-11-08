@@ -34,7 +34,7 @@ der Ausbauplan in **`TODO.md`**.
 - System-/Sicherheitseinstellungen (Windows-Firewall, Router, Rechte auf dem DB-Server) nicht selbst
   ändern – Befehl/SQL vorbereiten, Nutzer führt aus.
 - Nach Features: Tests, Pint, `npm run build`, im Browser (built-in, `http://localhost`) prüfen,
-  README ergänzen, am Ende Commit anbieten. Ideenlisten nach Umsetzbarkeit sortieren.
+  README ergänzen, danach committen und pushen. Ideenlisten nach Umsetzbarkeit sortieren.
 
 ## Umgebung (Fork-PC, Stand 08.11.2026)
 
@@ -72,7 +72,8 @@ php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_
 ## Aufbau
 
 - `app/Actions/` – schreibende Abläufe: `SaveRecipe` (inkl. Änderungsprotokoll), `DeleteRecipe`,
-  `SaveMealPlan`, `ImportRecipeFromUrl`, `ImportExercises`, `ImportFoods`, `SaveIngredientNutrition`, `SaveBodyProfile`.
+  `SaveMealPlan`, `ImportRecipeFromUrl`, `ImportExercises`, `ImportFoods`, `SaveIngredientNutrition`, `SaveBodyProfile`,
+  `AddPlannedMeal`, `ToggleTrainingDay`.
 - `app/Support/` – Domänenlogik: `Week` (ISO-Woche, Route-Binding `{week}` = `2026-W43`),
   `WishList` (Wunsch offen bis im Plan; „erfüllt“ wird berechnet), `ShoppingList`/`ShoppingListItem`/
   `Quantity` (Mengen addieren), `CookingSteps` (Zutaten/Timer je Schritt), `LastEaten`,
@@ -97,6 +98,12 @@ php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_
   `Support/Nutrition/EnergyBudget` (`$profile->budget($date)`): Ruhetag/Trainingstag/Wochenschnitt, Makros als
   `Nutrients`, `steps()` = Rechenweg, `warnings()`. Gate `manage-body-profile` (alle außer Kinder); Route `/profil`
   ohne Benutzer-Parameter → immer nur das eigene Profil. Action `SaveBodyProfile` (über die Beziehung, `user_id` nicht fillable).
+- Mein Plan (persönlicher Wochenplaner, `/mein-plan/{week?}`): `PlannedMeal` (Rezept+`servings` oder Food+`grams`,
+  Enum `MealSlot`, `position` je Tag+Mahlzeit, Scope `withDetails()` lädt `recipe.ingredients.food` + `food`,
+  `nutrients()` = null wenn Rezept ohne Nährwerte), `TrainingDay` (Zeile = Trainingstag). `Support/Planning/WeekPlan::for($user, $week)`
+  → `DayPlan` je Tag (Summe, Ziel aus `EnergyBudget`, `remainingKcal()`, `isOverBudget()` mit `budget.over_tolerance`).
+  Routen `{day}` = `2026-11-09`; alles ohne Benutzer-Parameter, `PlannedMealPolicy` = nur Besitzer. Für alle Rollen.
+  Lebensmittelsuche (`foods.search`) setzt Treffer aus `nutrition.synonyms` an den Anfang („Haferflocken“ → „Hafer Flocken“).
 - Rechte: `App\Enums\Role` (admin/adult/child), Policies `RecipePolicy`, `UserPolicy`,
   `MealSuggestionPolicy`, Gates in `AppServiceProvider` (`make-wishes`, `plan-meals`, `view-shopping-list`,
   `view-family-favorites`, `view-revision-log`, `manage-body-profile`). Admin-Account = reine Verwaltung: wünscht nicht,

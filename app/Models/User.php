@@ -84,6 +84,19 @@ class User extends Authenticatable
     }
 
     /**
+     * Persönlicher Wochenplaner – nur für die Person selbst sichtbar.
+     */
+    public function plannedMeals(): HasMany
+    {
+        return $this->hasMany(PlannedMeal::class);
+    }
+
+    public function trainingDays(): HasMany
+    {
+        return $this->hasMany(TrainingDay::class);
+    }
+
+    /**
      * Initialen für Avatare, z. B. „Anna Müller“ → „AM“.
      */
     public function initials(): string
