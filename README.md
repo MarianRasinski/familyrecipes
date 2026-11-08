@@ -262,6 +262,18 @@ Jede Zutat kann mit einem Lebensmittel aus dem BLS verknüpft werden. Daraus ber
 - Annahmen (Gewichte, Synonyme, Gewürze): `config/nutrition.php`. Code: `app/Support/Nutrition/`
   (`IngredientWeight`, `FoodMatcher`, `IngredientNutrition`, `RecipeNutrition`).
 
+## Rezepte filtern & Portionen umrechnen
+
+- **Rezeptkarten** zeigen kcal, Eiweiß und Kohlenhydrate pro Portion (sobald Zutaten zugeordnet sind; „≈“ = geschätzt).
+- **Filter** über der Tag-Liste (kombinierbar mit Suche, Tag und Favoriten), berechnet aus den Zutaten:
+  💪 **High Protein** (ab 20 g Eiweiß pro Portion und mind. 20 % der Kalorien aus Eiweiß),
+  🥗 **Low Carb** (höchstens 25 g Kohlenhydrate pro Portion, nur vollständig berechnete Rezepte),
+  ⚡ **Schnell** (Vorbereitung + Kochen höchstens 30 Minuten). Grenzen: `config/nutrition.php` (`recipe_filters`).
+  Rezepte ohne Nährwerte erscheinen bei High Protein/Low Carb nicht.
+- **Portionen umrechnen:** auf der Rezeptseite bei den Zutaten mit − / + (Link `?portionen=…`, 1–50).
+  Zahlen, Brüche und Bereiche werden umgerechnet („1/2 TL“ → „0,75 TL“), Angaben wie „etwas“ bleiben.
+  Die Mengen im Text der Zubereitungsschritte bleiben unverändert.
+
 ## Profil & Ziele (Tagesbudget)
 
 „Profil & Ziele“ (Benutzermenü, `/profil`) berechnet aus Geschlecht, Geburtsdatum, Größe, Gewicht, Aktivität im

@@ -47,6 +47,14 @@ final class Quantity
     }
 
     /**
+     * Für eine andere Portionenzahl umrechnen (Faktor = neue ÷ ursprüngliche Portionen).
+     */
+    public function scale(float $factor): self
+    {
+        return new self($this->min * $factor, $this->max * $factor);
+    }
+
+    /**
      * Deutsche Schreibweise: „1,5“, Bereiche als „500–600“.
      */
     public function format(): string

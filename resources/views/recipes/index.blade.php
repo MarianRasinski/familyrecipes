@@ -18,6 +18,9 @@
         @if (request()->boolean('favoriten'))
             <input type="hidden" name="favoriten" value="1">
         @endif
+        @if ($activeFilter)
+            <input type="hidden" name="eigenschaft" value="{{ $activeFilter->value }}">
+        @endif
 
         <label for="q" class="sr-only">Rezepte durchsuchen</label>
         <div class="relative max-w-xl">
@@ -29,12 +32,29 @@
         </div>
     </form>
 
+    {{-- Eigenschaften aus Nährwerten und Zeiten --}}
+    <nav @class(['flex flex-wrap items-center gap-2', 'mb-4' => $tags->isNotEmpty(), 'mb-10' => $tags->isEmpty()]) aria-label="Nach Eigenschaft filtern">
+        @foreach ($filters as $filter)
+            @php
+                $isActive = $activeFilter === $filter;
+                $params = [...request()->only('q', 'favoriten', 'tag'), 'eigenschaft' => $isActive ? null : $filter->value];
+            @endphp
+            <a href="{{ route('recipes.index', array_filter($params)) }}" title="{{ $filter->description() }}"
+               @class(['chip', 'chip-active' => $isActive]) aria-pressed="{{ $isActive ? 'true' : 'false' }}">
+                <span aria-hidden="true">{{ $filter->emoji() }}</span> {{ $filter->label() }}
+            </a>
+        @endforeach
+        @if ($activeFilter)
+            <span class="text-xs text-ink-soft">{{ $activeFilter->description() }}</span>
+        @endif
+    </nav>
+
     @if ($tags->isNotEmpty())
         <nav class="mb-10 flex flex-wrap gap-2" aria-label="Nach Tag filtern">
-            <a href="{{ route('recipes.index', request()->only('q', 'favoriten')) }}"
+            <a href="{{ route('recipes.index', request()->only('q', 'favoriten', 'eigenschaft')) }}"
                @class(['chip', 'chip-active' => ! request('tag')])>Alle</a>
             @foreach ($tags as $tag)
-                <a href="{{ route('recipes.index', [...request()->only('q', 'favoriten'), 'tag' => $tag->slug]) }}"
+                <a href="{{ route('recipes.index', [...request()->only('q', 'favoriten', 'eigenschaft'), 'tag' => $tag->slug]) }}"
                    @class(['chip', 'chip-active' => request('tag') === $tag->slug])>
                     {{ $tag->name }}
                     <span class="ml-1.5 opacity-60">{{ $tag->recipes_count }}</span>
@@ -48,14 +68,14 @@
             <span class="text-5xl" aria-hidden="true">🥄</span>
             <h2 class="font-display text-2xl font-semibold">Keine Rezepte gefunden</h2>
             <p class="max-w-sm text-ink-soft">
-                @if (request()->hasAny(['q', 'tag', 'favoriten']))
+                @if (request()->hasAny(['q', 'tag', 'favoriten', 'eigenschaft']))
                     Probier einen anderen Suchbegriff oder setze die Filter zurück.
                 @else
                     Dein Rezeptbuch ist noch leer – Zeit für das erste Rezept!
                 @endif
             </p>
             <div class="flex gap-3">
-                @if (request()->hasAny(['q', 'tag', 'favoriten']))
+                @if (request()->hasAny(['q', 'tag', 'favoriten', 'eigenschaft']))
                     <a href="{{ route('recipes.index') }}" class="btn btn-ghost">Filter zurücksetzen</a>
                 @endif
                 @can('create', App\Models\Recipe::class)
@@ -66,7 +86,7 @@
     @else
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($recipes as $recipe)
-                <x-recipe-card :recipe="$recipe" :favorite="$recipe->is_favorite" />
+                <x-recipe-card :recipe="$recipe" :favorite="$recipe->is_favorite" :nutrition="$recipe->nutrition()" />
             @endforeach
         </div>
 

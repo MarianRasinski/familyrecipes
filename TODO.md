@@ -38,12 +38,14 @@ Alle Berechnungen sind Orientierungswerte und zeigen ihren Rechenweg.
 
 - [ ] **Vorhandene Rezepte zuordnen** (Nutzer, über „Nährwerte prüfen“ – Vorschläge sind vorausgefüllt)
 - [ ] **Rezeptdatenbank ausbauen**
-  - [ ] Nährwerte auch auf Rezeptkarten/in der Übersicht; Handangaben `calories`/`protein` später entfernen oder
-        nur noch als Fallback nutzen
+  - [x] Nährwerte auf den Rezeptkarten (kcal, Eiweiß, KH pro Portion)
+  - [ ] Handangaben `calories`/`protein` später entfernen oder nur noch als Fallback nutzen
   - [ ] vegetarisch/vegan je Lebensmittel (aus Gruppe ableiten, Gerichte prüfen) → Filter
   - [ ] Synonymliste nach echten Zuordnungen erweitern (häufige Korrekturen im Assistenten übernehmen)
-  - [ ] Filter: High Protein, Low Carb, Schnell (berechnet), Vegetarisch/Vegan (aus Zutaten), Meal Prep geeignet (Feld)
-  - [ ] Portionen umrechnen auf der Rezeptseite (`Quantity` vorhanden)
+  - [x] Filter High Protein, Low Carb, Schnell (berechnet, `RecipeFilter`, Grenzen in `config/nutrition.php`)
+  - [ ] Filter Vegetarisch/Vegan (aus Zutaten), Meal Prep geeignet (Feld)
+  - [x] Portionen umrechnen auf der Rezeptseite (− / +, `?portionen=`); offen: Stückzahlen runden („1,25 Knoblauchzehe“),
+        Mengen im Text der Schritte und im Kochmodus mit umrechnen
 - [ ] **Profil & Ziele ausbauen** (Grundversion erledigt, siehe oben)
   - [ ] Makro-Ziele selbst festlegen (heute nur das kcal-Budget; Eiweiß/Fett werden immer berechnet)
   - [ ] Gewicht mit Datum speichern statt überschreiben → Grundlage für „Fortschritt“

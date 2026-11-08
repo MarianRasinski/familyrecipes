@@ -94,6 +94,9 @@ php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_
   (`$recipe->nutrition()`, braucht `ingredients.food` geladen). Alle Annahmen in `config/nutrition.php`.
   `SaveRecipe` übernimmt Zuordnungen gleichnamiger Zutaten. Zuordnungen stehen nicht im Änderungsprotokoll.
   Handangaben `recipes.calories/protein` werden nur angezeigt, solange nichts berechnet ist.
+  Rezeptübersicht: Enum `RecipeFilter` (`?eigenschaft=high-protein|low-carb|schnell`, Grenzen `nutrition.recipe_filters`);
+  mit Filter wird in PHP gefiltert und per `LengthAwarePaginator` geblättert (Index lädt immer `ingredients.food`).
+  Rezeptseite `?portionen=` → `amounts` je Zutat über `Quantity::scale()`.
 - Profil & Ziele: `BodyProfile` (Tabelle `body_profiles`, `user_id` unique, `$user->bodyProfile`), Enums `Sex`,
   `ActivityLevel` (PAL), `FitnessGoal`, `TrainingType` (MET) – Zahlen in `config/nutrition.php` (`budget`).
   `Support/Nutrition/EnergyBudget` (`$profile->budget($date)`): Ruhetag/Trainingstag/Wochenschnitt, Makros als
@@ -144,7 +147,7 @@ php artisan foods:import     # 7.140 Lebensmittel aus database/data/foods/bls_4_
 
 Der Ausbauplan des Forks steht in `TODO.md`.
 
-1. Portionen umrechnen auf der Rezeptseite (`Quantity` vorhanden)
+1. ~~Portionen umrechnen~~ (erledigt 08.11.2026, siehe README)
 2. Rezeptauswahl mit Suche/Favoriten auch im Planungsformular (heute `<select>`)
 3. Bewertung nach dem Essen („Wie war’s?“, auch Kinder) → Grundlage für 4
 4. Statistik: „oft gewünscht, selten gekocht“, Lieblingsgerichte je Person (Daten: `meal_suggestions`,

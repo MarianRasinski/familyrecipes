@@ -129,10 +129,26 @@
 
         <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
             {{-- Zutaten --}}
-            <section class="card-section self-start lg:sticky lg:top-24" x-data="{ checked: [] }">
+            <section id="zutaten" class="card-section scroll-mt-24 self-start lg:sticky lg:top-24" x-data="{ checked: [] }">
                 <h2 class="mb-1 font-display text-2xl font-semibold">Zutaten</h2>
-                @if ($recipe->servings)
-                    <p class="mb-5 text-sm text-ink-soft">für {{ $recipe->servings }} {{ $recipe->servings === 1 ? 'Portion' : 'Portionen' }}</p>
+                @if ($servings)
+                    {{-- Portionen umrechnen per Link (?portionen=…), ohne neues JavaScript --}}
+                    <div class="mb-5 flex flex-wrap items-center gap-3 text-sm text-ink-soft">
+                        <span>für</span>
+                        <span class="flex items-center gap-1">
+                            @if ($servings > 1)
+                                <a href="{{ route('recipes.show', [$recipe, 'portionen' => $servings - 1]) }}#zutaten" class="btn btn-ghost px-3! py-1.5!" aria-label="Eine Portion weniger">−</a>
+                            @endif
+                            <strong class="w-8 text-center text-base text-ink tabular-nums">{{ $servings }}</strong>
+                            @if ($servings < 50)
+                                <a href="{{ route('recipes.show', [$recipe, 'portionen' => $servings + 1]) }}#zutaten" class="btn btn-ghost px-3! py-1.5!" aria-label="Eine Portion mehr">+</a>
+                            @endif
+                        </span>
+                        <span>{{ $servings === 1 ? 'Portion' : 'Portionen' }}</span>
+                        @if ($servings !== $recipe->servings)
+                            <a href="{{ route('recipes.show', $recipe) }}#zutaten" class="text-xs font-semibold text-accent hover:text-ink">Original: {{ $recipe->servings }}</a>
+                        @endif
+                    </div>
                 @endif
 
                 <ul class="divide-y divide-line">
@@ -143,7 +159,7 @@
                                 <input type="checkbox" value="{{ $ingredient->id }}" x-model.number="checked"
                                        class="size-4 translate-y-0.5 rounded accent-accent">
                                 <span class="w-20 shrink-0 font-semibold tabular-nums">
-                                    {{ trim("{$ingredient->amount} {$ingredient->unit}") }}
+                                    {{ trim("{$amounts[$ingredient->id]} {$ingredient->unit}") }}
                                 </span>
                                 <span>
                                     {{ $ingredient->name }}

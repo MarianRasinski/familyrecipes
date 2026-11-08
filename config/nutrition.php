@@ -134,6 +134,16 @@ return [
         'kräuter', 'dill', 'msg', 'glutamat', 'zimt', 'kreuzkümmel', 'curry', 'kurkuma', 'flavor', 'aroma', 'süßstoff', 'backpulver', 'natron'],
 
     /*
+     * Filter der Rezeptübersicht (App\Enums\RecipeFilter), Werte pro Portion.
+     */
+    'recipe_filters' => [
+        'high_protein_min_g' => 20,
+        'high_protein_min_share' => 0.20,   // Anteil der Kalorien aus Eiweiß
+        'low_carb_max_g' => 25,
+        'quick_max_minutes' => 30,
+    ],
+
+    /*
     |--------------------------------------------------------------------------
     | Tagesbudget (Profil & Ziele, App\Support\Nutrition\EnergyBudget)
     |--------------------------------------------------------------------------

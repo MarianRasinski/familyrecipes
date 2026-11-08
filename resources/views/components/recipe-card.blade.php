@@ -1,4 +1,4 @@
-@props(['recipe', 'favorite' => false])
+@props(['recipe', 'favorite' => false, 'nutrition' => null])
 
 <article class="group relative flex flex-col overflow-hidden rounded-3xl border border-line bg-white transition hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-12px_rgb(43_36_32/0.25)]"
          style="--recipe: {{ $recipe->accent_color }}">
@@ -38,5 +38,19 @@
                 <span>{{ $recipe->difficulty->label() }}</span>
             @endif
         </div>
+
+        {{-- Nährwerte pro Portion (aus den Zutaten berechnet) --}}
+        @if ($nutrition?->hasData())
+            @php
+                $perServing = $recipe->servings ? $nutrition->perServing() : $nutrition->total;
+                $approx = $nutrition->isEstimated() ? '≈ ' : '';
+            @endphp
+            <p class="text-xs font-medium text-ink-soft">
+                🔥 <span class="text-ink">{{ $approx }}{{ number_format($perServing->kcal, 0, ',', '.') }} kcal</span>
+                · {{ number_format($perServing->protein, 0, ',', '.') }} g Eiweiß
+                · {{ number_format($perServing->carbs, 0, ',', '.') }} g KH
+                {{ $recipe->servings ? 'pro Portion' : 'gesamt' }}
+            </p>
+        @endif
     </div>
 </article>
